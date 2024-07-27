@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
@@ -27,10 +29,6 @@ function CustomPagination(props: CustomPaginationProps) {
     pageSize,
   });
 
-  if (currentPage === 0 || (pages && pages?.length < 2)) {
-    return null;
-  }
-
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', pageNumber.toString());
@@ -53,7 +51,11 @@ function CustomPagination(props: CustomPaginationProps) {
     if (currentPage) {
       onPageChange(currentPage);
     }
-  }, [currentPage]);
+  }, [currentPage, onPageChange]);
+
+  if (currentPage === 0 || (pages && pages?.length < 2)) {
+    return null;
+  }
 
   return (
     <Pagination>
