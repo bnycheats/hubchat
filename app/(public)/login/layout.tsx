@@ -1,21 +1,12 @@
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
-import Image from 'next/image';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import Logo from '@/assets/logo.svg';
+import AuthLayout from '@/layouts/auth-layout';
 
 /**
  * The Layout is needed to specify the page title and meta tags.
  */
 export default function LoginLayout({ children }: { children: ReactNode }) {
-  return (
-    <Card className="absolute left-1/2 top-1/4 w-[400px] -translate-x-1/2">
-      <CardHeader className="flex items-center">
-        <Image src={Logo} width={150} height={150} alt="Logo" />
-      </CardHeader>
-      <CardContent>{children}</CardContent>
-    </Card>
-  );
+  return <AuthLayout>{children}</AuthLayout>;
 }
 
 export const metadata: Metadata = {
