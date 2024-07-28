@@ -7,7 +7,7 @@ import Logo from '@/assets/logo.svg';
 /**
  * The Layout is needed to specify the page title and meta tags.
  */
-export default function LoginLayout({ children }: { children: ReactNode }) {
+export default function ForgotPasswordLayout({ children }: { children: ReactNode }) {
   return (
     <Card className="absolute left-1/2 top-1/4 w-[400px] -translate-x-1/2">
       <CardHeader className="flex items-center">
@@ -19,6 +19,6 @@ export default function LoginLayout({ children }: { children: ReactNode }) {
 }
 
 export const metadata: Metadata = {
-  title: 'Login',
+  title: 'Forgot Password',
   robots: 'noindex',
 };

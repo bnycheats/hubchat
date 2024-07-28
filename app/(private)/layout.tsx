@@ -5,18 +5,12 @@ import Header from '@/components/header';
 import { type MenuModelType } from '@/components/menu';
 import Sidebar from '@/components/sidebar';
 import PrivateProvider from '@/context/private-provider';
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
 import { HeaderDropdown } from '@/components/header';
 
 /**
  * The Layout is needed to specify the page title and meta tags.
  */
-export default async function PrivateLayout({ children }: PropsWithChildren) {
-  const { data } = await createClient().auth.getSession();
-  if (!data.session) {
-    redirect('/login');
-  }
+export default function PrivateLayout({ children }: PropsWithChildren) {
   return (
     <PrivateProvider>
       <section className="flex h-screen overflow-hidden">

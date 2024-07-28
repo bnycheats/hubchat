@@ -1,36 +1,11 @@
 'use client';
 
-import { useMutation } from '@tanstack/react-query';
-import { signOut } from '@/utils/supabase/client/auth';
-import { useToast } from '../ui/use-toast';
-import { useRouter } from 'next/navigation';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import Spinner from '../spinner';
+import useLogout from '@/hooks/useLogout';
 
 function LogoutAction() {
-  const { toast } = useToast();
-  const { replace } = useRouter();
-
-  const logoutMutation = useMutation({
-    mutationFn: () => signOut(),
-    onSuccess: (data) => {
-      if (data.error) {
-        toast({
-          variant: 'destructive',
-          title: data.error.message,
-        });
-      } else {
-        replace('/');
-      }
-    },
-    onError: (error) => {
-      toast({
-        variant: 'destructive',
-        title: error.message,
-      });
-    },
-  });
-
+  const { logoutMutation } = useLogout();
   return (
     <DropdownMenuItem
       className="cursor-pointer"

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/utils/supabase/client';
 import { Session } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
 import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
 export type AuthContextValue = {
@@ -14,6 +15,7 @@ export const AuthContext = createContext<AuthContextValue>({
 
 export function AuthProvider(props: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
+  const { push } = useRouter();
 
   useEffect(() => {
     const supabaseClient = createClient();
@@ -21,8 +23,17 @@ export function AuthProvider(props: PropsWithChildren) {
       setSession(response.data.session);
     });
 
-    const { data } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+    const { data } = supabaseClient.auth.onAuthStateChange((event, session) => {
       setSession(session);
+      console.log(event);
+      switch (event) {
+        case 'PASSWORD_RECOVERY': {
+          push('/update-password');
+          break;
+        }
+        default:
+          break;
+      }
     });
 
     return () => data.subscription.unsubscribe();

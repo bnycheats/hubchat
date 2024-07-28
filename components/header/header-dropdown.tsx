@@ -16,11 +16,13 @@ import LogoutAction from './logout-action';
 import { createClient } from '@/utils/supabase/server';
 
 export default async function HeaderDropdown() {
-  const { data } = await createClient().auth.getUser();
+  const {
+    data: { user },
+  } = await createClient().auth.getUser();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar name={data.user?.email} />
+        <Avatar name={user?.email} />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-52">
         <DropdownMenuLabel className="flex flex-col items-start gap-2">
@@ -31,7 +33,7 @@ export default async function HeaderDropdown() {
               </Badge>
             ))} */}
           </div>
-          <span>{data.user?.email}</span>
+          <span>{user?.email}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
