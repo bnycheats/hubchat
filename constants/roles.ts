@@ -1,5 +1,9 @@
 export default [
   {
+    value: 'ADMIN',
+    label: 'Admin',
+  },
+  {
     value: 'HR',
     label: 'Human Resource',
   },

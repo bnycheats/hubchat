@@ -10,7 +10,7 @@ export async function updateSession(request: NextRequest) {
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY!,
     {
       cookies: {
         getAll() {
@@ -44,6 +44,7 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
   const userMetaData = user?.user_metadata as UserMetadata;
 
   if (user && !userMetaData?.user_role?.includes(RolesEnums.ADMIN) && request.nextUrl.pathname !== '/un-authorized') {

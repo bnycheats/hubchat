@@ -23,10 +23,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import { RolesEnums } from '@/helpers/types';
 import { useRouter } from 'next/navigation';
-import generatePass from '@/utils/generatePass';
+import Password from '@/components/password';
 
 const FormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
+  password: z.string().min(6, {
+    message: 'Password must be at least 6 characters',
+  }),
   first_name: z.string().min(1, { message: 'This field is required' }),
   last_name: z.string().min(1, { message: 'This field is required' }),
   dob: z.date({
@@ -46,6 +49,7 @@ export default function CreateUserForm() {
 
   const defaultValues: z.infer<typeof FormSchema> = {
     email: '',
+    password: '',
     first_name: '',
     last_name: '',
     dob: new Date(),
@@ -63,11 +67,11 @@ export default function CreateUserForm() {
 
   const createUserMutation = useMutation({
     mutationFn: (request: z.infer<typeof FormSchema>) => {
-      const { email, user_role, dob, ...other } = request;
+      const { email, user_role, dob, password, ...other } = request;
       return createUser(
         {
-          email: email,
-          password: generatePass(),
+          email,
+          password,
         },
         {
           ...other,
@@ -82,7 +86,7 @@ export default function CreateUserForm() {
           variant: 'destructive',
           title: data.error.message,
         });
-      } else if (data.data.session) {
+      } else if (data.data.user) {
         toast({
           variant: 'success',
           title: 'User created successfully',
@@ -112,6 +116,17 @@ export default function CreateUserForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <Input {...field} type="email" placeholder="Email Address*" />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <Password {...field} placeholder="Password*" />
               <FormMessage />
             </FormItem>
           )}

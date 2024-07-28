@@ -1,17 +1,15 @@
 'use client';
 
-import Spinner from '@/components/spinner';
-import useLogout from '@/hooks/useLogout';
 import { Button } from '@/components/ui/button';
+import useLogout from '@/hooks/useLogout';
+import Spinner from '@/components/spinner';
 
-function LogoutAction() {
+export default function LogoutAction() {
   const { logoutMutation } = useLogout();
   return (
-    <Button onClick={() => logoutMutation.mutate()} type="button" size="sm">
+    <Button onClick={() => logoutMutation.mutate()} size="sm">
       {logoutMutation.isPending && <Spinner className="h-5 w-5 text-white" />}
       Logout
     </Button>
   );
 }
-
-export default LogoutAction;

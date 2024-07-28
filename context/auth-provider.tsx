@@ -3,6 +3,7 @@
 import { createClient } from '@/utils/supabase/client';
 import { Session } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
 import { PropsWithChildren, createContext, useEffect, useState } from 'react';
 
 export type AuthContextValue = {
@@ -25,7 +26,7 @@ export function AuthProvider(props: PropsWithChildren) {
 
     const { data } = supabaseClient.auth.onAuthStateChange((event, session) => {
       setSession(session);
-      console.log(event);
+      console.log(session && jwtDecode(session?.access_token));
       switch (event) {
         case 'PASSWORD_RECOVERY': {
           push('/update-password');
