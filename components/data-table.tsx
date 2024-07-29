@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable, type TableOptions } from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import Spinner from './spinner';
 
 export function DataTable<TData, TValue>({
   className,
@@ -20,11 +21,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className={cn('py-2 relative', className)}>
-      <div
-        className={cn('inset-0 z-1 hidden cursor-not-allowed bg-stroke/30 dark:bg-black/50', {
-          'absolute block': isLoading,
-        })}
-      />
+      {isLoading && <Spinner className="w-10 h-10" centered fixed={false} />}
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

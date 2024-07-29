@@ -60,13 +60,12 @@ function CustomPagination(props: CustomPaginationProps) {
   return (
     <Pagination>
       <PaginationContent>
-        <PaginationItem>
-          <PaginationPrevious
-            className={cn({
-              'pointer-events-none opacity-50': currentPage === 1,
-            })}
-            onClick={onPrevious}
-          />
+        <PaginationItem
+          className={cn({
+            'pointer-events-none opacity-50 cursor-not-allowed': currentPage === 1,
+          })}
+        >
+          <PaginationPrevious onClick={onPrevious} />
         </PaginationItem>
 
         {pages?.map((pageNumber, index) => {
@@ -90,13 +89,12 @@ function CustomPagination(props: CustomPaginationProps) {
             </PaginationItem>
           );
         })}
-        <PaginationItem>
-          <PaginationNext
-            className={cn({
-              'pointer-events-none opacity-50': currentPage === lastPage,
-            })}
-            onClick={onNext}
-          />
+        <PaginationItem
+          className={cn({
+            'pointer-events-none cursor-not-allowed opacity-50': currentPage === lastPage,
+          })}
+        >
+          <PaginationNext onClick={onNext} />
         </PaginationItem>
       </PaginationContent>
     </Pagination>

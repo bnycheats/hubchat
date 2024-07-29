@@ -1,11 +1,13 @@
 import { cn } from '@/lib/utils';
 
 const Spinner = (props: SpinnerProps) => {
-  const { className, centered, fullScreen } = props;
+  const { className, centered, fixed = true, fullScreen } = props;
   return (
     <div
       className={cn({
-        'z-[99999] fixed inset-0 flex h-full w-full items-center justify-center bg-white/30 backdrop-blur-sm': centered,
+        'z-[99999] absolute inset-0 flex h-full w-full items-center justify-center bg-white/30 backdrop-blur-sm':
+          centered,
+        fixed: fixed,
         'h-screen': fullScreen,
       })}
     >
@@ -29,6 +31,7 @@ const Spinner = (props: SpinnerProps) => {
 type SpinnerProps = {
   className?: string;
   centered?: boolean;
+  fixed?: boolean;
   fullScreen?: boolean;
 };
 

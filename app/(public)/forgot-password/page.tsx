@@ -75,7 +75,7 @@ export default function ForgotPasswordPage() {
             )}
           />
           <div className="text-center">
-            <Button className="mb-2 w-full">
+            <Button className="mb-2 rounded-full w-full">
               {forgotPasswordMutation.isPending && <Spinner className="h-5 w-5 text-white" />}
               Send Reset Link
             </Button>

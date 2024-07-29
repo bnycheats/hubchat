@@ -92,7 +92,7 @@ export default function LoginPage() {
               </Button>
             </Link>
           </div>
-          <Button className="w-full" disabled={loginMutation.isPending}>
+          <Button className="w-full rounded-full" disabled={loginMutation.isPending}>
             {loginMutation.isPending && <Spinner className="h-5 w-5 text-white" />}
             Login
           </Button>

@@ -7,6 +7,7 @@ export async function createUser(credentials: Credential, userMetadata: UserMeta
     email_confirm: true,
     user_metadata: {
       ...userMetadata,
+      status: true,
     },
   });
   return response;

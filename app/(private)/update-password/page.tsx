@@ -91,7 +91,7 @@ function UpdatePassword() {
             </FormItem>
           )}
         />
-        <Button className="mb-2 w-full">
+        <Button className="mb-2 rounded-full w-full">
           {updatePasswordMutation.isPending && <Spinner className="h-5 w-5 text-white" />}
           Change Password
         </Button>
