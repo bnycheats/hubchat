@@ -23,3 +23,7 @@ export function forgotPassword(email: string) {
 export function updatePassword(password: string) {
   return createClient().auth.updateUser({ password });
 }
+
+export function updateUserMetaData(updates: Partial<UserMetadata>) {
+  return createClient().auth.updateUser({ data: updates });
+}

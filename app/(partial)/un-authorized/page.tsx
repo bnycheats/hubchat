@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import AuthLayout from '@/layouts/auth-layout';
 
-import LogoutAction from './_logout-action';
+import LogoutAction from './logout-action';
 
 export default async function UnAuthorizedPage() {
   const {

@@ -28,10 +28,10 @@ export default async function HeaderDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-52">
         <DropdownMenuLabel className="flex flex-col items-start gap-2">
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1 max-w-52">
             {userMetaData?.user_role?.map((item, index) => (
               <Badge key={index} variant="secondary">
-                {item}
+                {item.toUpperCase()}
               </Badge>
             ))}
           </div>

@@ -26,6 +26,7 @@ export function AuthProvider(props: PropsWithChildren) {
 
     const { data } = supabaseClient.auth.onAuthStateChange((event, session) => {
       setSession(session);
+      console.log(event);
       console.log(session && jwtDecode(session?.access_token));
       switch (event) {
         case 'PASSWORD_RECOVERY': {

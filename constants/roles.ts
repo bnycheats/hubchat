@@ -1,18 +1,18 @@
 export default [
   {
-    value: 'ADMIN',
+    value: 'admin',
     label: 'Admin',
   },
   {
-    value: 'HR',
+    value: 'hr',
     label: 'Human Resource',
   },
   {
-    value: 'MANAGER',
+    value: 'manager',
     label: 'Manager',
   },
   {
-    value: 'CHATTER',
+    value: 'chatter',
     label: 'Chatter',
   },
 ];

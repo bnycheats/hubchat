@@ -29,6 +29,7 @@ export async function updateSession(request: NextRequest) {
 
   const PUBLIC_FILE = /\.(.*)$/;
   const PUBLIC_PATHS = ['/login', '/forgot-password'];
+
   if (
     request.nextUrl.pathname.startsWith('/_next') || // exclude Next.js internals
     request.nextUrl.pathname.startsWith('/api') || //  exclude all API routes
@@ -47,10 +48,10 @@ export async function updateSession(request: NextRequest) {
 
   const userMetaData = user?.user_metadata as UserMetadata;
 
-  if (user && !userMetaData?.user_role?.includes(RolesEnums.ADMIN) && request.nextUrl.pathname !== '/un-authorized') {
-    url.pathname = '/un-authorized';
-    return NextResponse.redirect(url);
-  }
+  // if (user && !userMetaData?.user_role?.includes(RolesEnums.ADMIN) && request.nextUrl.pathname !== '/un-authorized') {
+  //   url.pathname = '/un-authorized';
+  //   return NextResponse.redirect(url);
+  // }
 
   if (user && (isRoot || PUBLIC_PATHS.includes(request.nextUrl.pathname))) {
     url.pathname = '/dashboard';
