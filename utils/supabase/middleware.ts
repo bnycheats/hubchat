@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import { type UserMetadata } from './client/auth/types';
+import { type UserMetadata } from './server/functions/types';
 import { RolesEnums } from '@/helpers/types';
 
 export async function updateSession(request: NextRequest) {
@@ -48,10 +48,10 @@ export async function updateSession(request: NextRequest) {
 
   const userMetaData = user?.user_metadata as UserMetadata;
 
-  // if (user && !userMetaData?.user_role?.includes(RolesEnums.ADMIN) && request.nextUrl.pathname !== '/un-authorized') {
-  //   url.pathname = '/un-authorized';
-  //   return NextResponse.redirect(url);
-  // }
+  if (user && !userMetaData?.user_role?.includes(RolesEnums.ADMIN) && request.nextUrl.pathname !== '/un-authorized') {
+    url.pathname = '/un-authorized';
+    return NextResponse.redirect(url);
+  }
 
   if (user && (isRoot || PUBLIC_PATHS.includes(request.nextUrl.pathname))) {
     url.pathname = '/dashboard';

@@ -1,6 +1,6 @@
 'use client';
 
-import { updatePassword } from '@/utils/supabase/client/auth';
+import { updatePassword } from '@/utils/supabase/client/functions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm, type SubmitHandler } from 'react-hook-form';

@@ -2,13 +2,14 @@
 
 import { format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
-import { getUsers } from '@/utils/supabase/client/queries/users';
+import { getUsers } from '@/utils/supabase/client/functions';
 import CustomPagination from '@/components/pagination';
 import DataTable from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 import { type AuthError, type Pagination, type User } from '@supabase/supabase-js';
 import { useState } from 'react';
-import { DEFAULT_SIZE, DEFAULT_PAGE } from './_constants';
+import ActionMenu from './action-menu';
+import { DEFAULT_SIZE, DEFAULT_PAGE } from './constants';
 
 function UsersDataTable(props: UsersDataTableProps) {
   const [page, setPage] = useState(DEFAULT_PAGE);
@@ -30,7 +31,7 @@ function UsersDataTable(props: UsersDataTableProps) {
         data={users ?? []}
         columns={[
           {
-            header: 'Created at',
+            header: 'Created',
             accessorKey: 'created_at',
             cell: ({ row }) => format(new Date(row.getValue('created_at')), 'MMM dd yyy H:MM a'),
           },
@@ -54,6 +55,11 @@ function UsersDataTable(props: UsersDataTableProps) {
                 {row.getValue('active') ? 'Active' : 'Disabled'}
               </Badge>
             ),
+          },
+          {
+            header: '',
+            accessorKey: 'action',
+            cell: ({ row }) => <ActionMenu row={row} />,
           },
         ]}
       />

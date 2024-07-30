@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Logo from '@/assets/logo.svg';
 import Image from 'next/image';
 import usePrivateLayout from '@/hooks/usePrivateLayout';
-import HeaderDropdown from './header-dropdown';
 import { PropsWithChildren } from 'react';
 
 function Header(props: PropsWithChildren) {

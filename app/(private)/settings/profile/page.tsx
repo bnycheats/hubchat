@@ -8,7 +8,7 @@ import { AiOutlineRight } from 'react-icons/ai';
 import Avatar from '@/components/header/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { type UserMetadata } from '@/utils/supabase/client/auth/types';
+import { type UserMetadata } from '@/utils/supabase/server/functions/types';
 import UpdateFullNameModal from './update-full-name-modal';
 import UpdateDobModal from './update-dob-modal';
 import UpdatePhoneModal from './update-phone-modal';

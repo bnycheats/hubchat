@@ -9,6 +9,7 @@ export type UserMetadata = {
   street: string;
   postal_code: string;
   user_role: Array<RolesEnums>;
+  status: boolean;
 };
 
 export type Credential = {

@@ -1,7 +1,7 @@
 'use client';
 
 import provinces from '@/constants/provinces';
-import { createUser } from '@/utils/supabase/client/auth';
+import { createUser } from '@/utils/supabase/server/functions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -77,23 +77,17 @@ export default function CreateUserForm() {
           ...other,
           user_role: user_role as Array<RolesEnums>,
           dob: dob.getTime(),
+          status: true,
         },
       );
     },
     onSuccess: (data) => {
-      if (data.error) {
-        toast({
-          variant: 'destructive',
-          title: data.error.message,
-        });
-      } else if (data.data.user) {
-        toast({
-          variant: 'success',
-          title: 'User created successfully',
-        });
-        form.reset();
-        queryClient.invalidateQueries({ queryKey: ['Users'] });
-      }
+      toast({
+        variant: 'success',
+        title: 'User created successfully',
+      });
+      form.reset();
+      queryClient.invalidateQueries({ queryKey: ['Users'] });
     },
     onError: (error: any) => {
       toast({

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { signOut } from '@/utils/supabase/server/auth';
+import { signOut } from '@/utils/supabase/server/functions';
 import { useToast } from '@/components/ui/use-toast';
 
 function useLogout() {

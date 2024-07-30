@@ -21,7 +21,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className={cn('py-2 relative', className)}>
-      {isLoading && <Spinner className="w-10 h-10" centered fixed={false} />}
+      {isLoading && <Spinner className="w-10 h-10" centered absolute />}
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

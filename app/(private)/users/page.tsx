@@ -1,10 +1,10 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { getUsers } from '@/utils/supabase/client/queries/users';
+import { getUsers } from '@/utils/supabase/client/functions';
 import { notFound } from 'next/navigation';
 import UsersDataTable from './users-data-table';
-import { DEFAULT_SIZE, DEFAULT_PAGE } from './_constants';
+import { DEFAULT_SIZE, DEFAULT_PAGE } from './constants';
 
 export default async function UsersPage() {
   try {
