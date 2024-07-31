@@ -9,10 +9,10 @@ import Avatar from '@/components/header/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { type UserMetadata } from '@/utils/supabase/server/functions/types';
-import UpdateFullNameModal from './update-full-name-modal';
-import UpdateDobModal from './update-dob-modal';
-import UpdatePhoneModal from './update-phone-modal';
-import UpdateAddressModal from './update-address-modal';
+import UpdateFullNameModal from '@/components/modals/update-full-name-modal';
+import UpdateDobModal from '@/components/modals/update-dob-modal';
+import UpdatePhoneModal from '@/components/modals/update-phone-modal';
+import UpdateAddressModal from '@/components/modals/update-address-modal';
 
 export default function ProfilePage() {
   const { session } = useAuth();

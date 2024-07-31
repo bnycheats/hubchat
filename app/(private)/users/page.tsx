@@ -3,8 +3,8 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { getUsers } from '@/utils/supabase/client/functions';
 import { notFound } from 'next/navigation';
-import UsersDataTable from './users-data-table';
-import { DEFAULT_SIZE, DEFAULT_PAGE } from './constants';
+import UsersDataTable from '../../../components/data-tables/users-data-table';
+import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
 
 export default async function UsersPage() {
   const initialData = await getUsers(DEFAULT_PAGE, DEFAULT_SIZE);

@@ -8,8 +8,8 @@ import DataTable from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
 import { type AuthError, type Pagination, type User } from '@supabase/supabase-js';
 import { useState } from 'react';
-import ActionMenu from './action-menu';
-import { DEFAULT_SIZE, DEFAULT_PAGE } from './constants';
+import ActionMenu from '../action-menus/user-action-menu';
+import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
 
 function UsersDataTable(props: UsersDataTableProps) {
   const [page, setPage] = useState(DEFAULT_PAGE);

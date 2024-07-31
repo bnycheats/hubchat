@@ -11,12 +11,12 @@ import {
 import { type Row } from '@tanstack/react-table';
 import { type User } from '@supabase/supabase-js';
 import Link from 'next/link';
-import UserInfo from './user-info';
-import DisableUserAlert from './disable-user-alert';
-import EnableUserAlert from './enable-user-alert';
+import UserInfo from '../sheets/user-info-sheet';
+import DisableUserAlert from '../alerts/disable-user-alert';
+import EnableUserAlert from '../alerts/enable-user-alert';
 import { type UserMetadata } from '@/utils/supabase/server/functions/types';
 
-function ActionMenu(props: ActionMenuProps) {
+function UserActionMenu(props: UserActionMenuProps) {
   const { row } = props;
   const userMetaData = row.original.user_metadata as UserMetadata;
   const [enableUserOpen, setEnableUserOpen] = useState(false);
@@ -47,8 +47,8 @@ function ActionMenu(props: ActionMenuProps) {
   );
 }
 
-type ActionMenuProps = {
+type UserActionMenuProps = {
   row: Row<User>;
 };
 
-export default ActionMenu;
+export default UserActionMenu;

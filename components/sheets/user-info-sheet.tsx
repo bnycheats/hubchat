@@ -7,7 +7,7 @@ import { Table, TableBody, TableRow, TableCell } from '@/components/ui/table';
 import { type UserMetadata } from '@/utils/supabase/server/functions/types';
 import { Badge } from '@/components/ui/badge';
 
-function UserInfo(props: UserInfoProps) {
+function UserInfoSheet(props: UserInfoSheetProps) {
   const {
     row: { original: user },
     close,
@@ -98,6 +98,6 @@ function UserInfo(props: UserInfoProps) {
   );
 }
 
-type UserInfoProps = { row: Row<User>; close: () => void } & DialogProps;
+type UserInfoSheetProps = { row: Row<User>; close: () => void } & DialogProps;
 
-export default UserInfo;
+export default UserInfoSheet;

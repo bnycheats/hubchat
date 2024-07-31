@@ -1,7 +1,7 @@
 import { createClient } from '@/utils/supabase/server';
 import AuthLayout from '@/layouts/auth-layout';
 
-import LogoutAction from './logout-action';
+import UnAuthorizedLogoutButton from '@/components/buttons/un-authorized-logout-button';
 
 export default async function UnAuthorizedPage() {
   const {
@@ -13,7 +13,7 @@ export default async function UnAuthorizedPage() {
       <h1 className="mb-3 text-lg font-medium">Hi {user?.email}</h1>
       <p>We are sorry but you are not authorized to access this tool. Please contact your developer.</p>
       <div className="text-right mt-4">
-        <LogoutAction />
+        <UnAuthorizedLogoutButton />
       </div>
     </AuthLayout>
   );

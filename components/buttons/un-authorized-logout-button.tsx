@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import useLogout from '@/hooks/useLogout';
 import Spinner from '@/components/spinner';
 
-export default function LogoutAction() {
+export default function UnAuthorizedLogoutButton() {
   const { logoutMutation } = useLogout();
   return (
     <Button onClick={() => logoutMutation.mutate()} size="sm">

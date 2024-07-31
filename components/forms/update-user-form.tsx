@@ -244,18 +244,6 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
   );
 }
 
-type FormValues = {
-  email: string;
-  first_name: string;
-  last_name: string;
-  dob: Date;
-  role: Array<string>;
-  phone_number: string;
-  street: string;
-  province: string;
-  postal_code: string;
-};
-
 type UpdateUserFormProps = {
   user: User;
 };

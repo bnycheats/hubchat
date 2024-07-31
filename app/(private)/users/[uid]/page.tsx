@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { AiOutlineEye } from 'react-icons/ai';
 import { notFound, useParams } from 'next/navigation';
 import { getUser } from '@/utils/supabase/client/functions';
-import UpdateUserForm from './update-user-form';
+import UpdateUserForm from '@/components/forms/update-user-form';
 
 export default async function UpdateUserPage() {
   const { uid } = useParams<{ uid: string }>();
