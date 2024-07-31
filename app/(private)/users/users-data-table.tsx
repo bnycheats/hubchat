@@ -16,7 +16,7 @@ function UsersDataTable(props: UsersDataTableProps) {
 
   const { data, isFetching } = useQuery({
     queryKey: ['Users', page],
-    queryFn: () => getUsers({ page, perPage: DEFAULT_SIZE }),
+    queryFn: () => getUsers(page, DEFAULT_SIZE),
     initialData: props.initialData,
   });
 
@@ -49,10 +49,10 @@ function UsersDataTable(props: UsersDataTableProps) {
           },
           {
             header: 'Status',
-            accessorKey: 'active',
-            cell: ({ row }) => (
-              <Badge variant={row.getValue('active') ? 'default' : 'destructive'}>
-                {row.getValue('active') ? 'Active' : 'Disabled'}
+            accessorKey: 'user_metadata.status',
+            cell: ({ cell }) => (
+              <Badge variant={cell.getValue() ? 'default' : 'destructive'}>
+                {cell.getValue() ? 'Active' : 'Disabled'}
               </Badge>
             ),
           },

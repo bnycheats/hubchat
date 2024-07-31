@@ -1,6 +1,6 @@
 'use client';
 
-import { updateUserMetaData } from '@/utils/supabase/client/functions';
+import { updateProfileUserMetaData } from '@/utils/supabase/client/functions';
 import useAuth from '@/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type DialogProps } from '@radix-ui/react-dialog';
@@ -43,7 +43,7 @@ function UpdateDobModal(props: UpdateDobModalProps) {
   });
 
   const updateDateOfBirthMutation = useMutation({
-    mutationFn: (request: Pick<UserMetadata, 'dob'>) => updateUserMetaData(request),
+    mutationFn: (request: Pick<UserMetadata, 'dob'>) => updateProfileUserMetaData(request),
     onSuccess: () => {
       toast({
         variant: 'success',

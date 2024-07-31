@@ -5,7 +5,7 @@ function TooltipInfo(props: TooltipInfoProps) {
   return (
     <TooltipProvider delayDuration={100}>
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger type="button">
           <AiOutlineInfoCircle size="18" />
         </TooltipTrigger>
         <TooltipContent>{props.infoText}</TooltipContent>

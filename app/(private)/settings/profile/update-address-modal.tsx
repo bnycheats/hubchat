@@ -1,7 +1,7 @@
 'use client';
 
 import provinces from '@/constants/provinces';
-import { updateUserMetaData } from '@/utils/supabase/client/functions';
+import { updateProfileUserMetaData } from '@/utils/supabase/client/functions';
 import useAuth from '@/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type DialogProps } from '@radix-ui/react-dialog';
@@ -44,7 +44,7 @@ function UpdateAddressModal(props: UpdateAddressModalProps) {
   });
 
   const updateAddressMutation = useMutation({
-    mutationFn: (request: z.infer<typeof FormSchema>) => updateUserMetaData(request),
+    mutationFn: (request: z.infer<typeof FormSchema>) => updateProfileUserMetaData(request),
     onSuccess: () => {
       toast({
         variant: 'success',

@@ -7,22 +7,23 @@ import UsersDataTable from './users-data-table';
 import { DEFAULT_SIZE, DEFAULT_PAGE } from './constants';
 
 export default async function UsersPage() {
-  try {
-    const initialData = await getUsers({ page: DEFAULT_PAGE, perPage: DEFAULT_SIZE });
-    return (
-      <section>
-        <div className="flex items-center gap-4 mb-6">
-          <h2 className="text-3xl">Users</h2>
-          <Link href="/create-user">
-            <Button className="rounded-full" variant="secondary" size="sm">
-              <AiOutlinePlus /> Create User
-            </Button>
-          </Link>
-        </div>
-        <UsersDataTable initialData={initialData} />
-      </section>
-    );
-  } catch (e) {
+  const initialData = await getUsers(DEFAULT_PAGE, DEFAULT_SIZE);
+
+  if (initialData.error) {
     notFound();
   }
+
+  return (
+    <section>
+      <div className="flex items-center gap-4 mb-6">
+        <h2 className="text-3xl">Users</h2>
+        <Link href="/create-user">
+          <Button className="rounded-full" variant="secondary" size="sm">
+            <AiOutlinePlus /> Create User
+          </Button>
+        </Link>
+      </div>
+      <UsersDataTable initialData={initialData} />
+    </section>
+  );
 }

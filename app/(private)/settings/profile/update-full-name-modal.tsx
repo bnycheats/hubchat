@@ -1,6 +1,6 @@
 'use client';
 
-import { updateUserMetaData } from '@/utils/supabase/client/functions';
+import { updateProfileUserMetaData } from '@/utils/supabase/client/functions';
 import useAuth from '@/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type DialogProps } from '@radix-ui/react-dialog';
@@ -39,7 +39,7 @@ function UpdateFullNameModal(props: UpdateFullNameModalProps) {
   });
 
   const updateFullNameMutation = useMutation({
-    mutationFn: (request: z.infer<typeof FormSchema>) => updateUserMetaData(request),
+    mutationFn: (request: z.infer<typeof FormSchema>) => updateProfileUserMetaData(request),
     onSuccess: () => {
       toast({
         variant: 'success',

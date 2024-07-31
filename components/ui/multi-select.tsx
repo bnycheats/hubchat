@@ -1,22 +1,11 @@
-import * as React from "react";
-import { Check, ChevronsUpDown, X } from "lucide-react";
+import * as React from 'react';
+import { Check, ChevronsUpDown, X } from 'lucide-react';
 
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 export type OptionType = {
   label: string;
@@ -30,7 +19,8 @@ function MultiSelect({
   displayLabel,
   onValueChange,
   className,
-  placeholder = "Select...",
+  placeholder = 'Select...',
+  disabled = false,
   ...props
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
@@ -45,30 +35,19 @@ function MultiSelect({
     <Popover open={open} onOpenChange={setOpen} {...props}>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn(
-            "w-full justify-between",
-            className,
-            selected.length > 1 ? "h-auto" : "h-10"
-          )}
+          className={cn('w-full justify-between', className, selected.length > 1 ? 'h-auto' : 'h-10')}
           onClick={() => setOpen(!open)}
         >
           <div className="flex flex-wrap gap-1">
-            {!selected ||
-              (selected.length === 0 && (
-                <span className="text-body font-normal">{placeholder}</span>
-              ))}
+            {!selected || (selected.length === 0 && <span className="text-body font-normal">{placeholder}</span>)}
             {selected.map((item) => (
               <Badge key={item} className="flex gap-1.5">
-                {displayLabel
-                  ? options?.find((option) => option.value === item)?.label
-                  : item}
-                <X
-                  className="h-4 w-4 hover:text-destructive"
-                  onClick={() => handleUnselect(item)}
-                />
+                {displayLabel ? options?.find((option) => option.value === item)?.label : item}
+                <X className="h-4 w-4 hover:text-destructive" onClick={() => handleUnselect(item)} />
               </Badge>
             ))}
           </div>
@@ -94,12 +73,7 @@ function MultiSelect({
                   }}
                 >
                   <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selected.includes(option.value)
-                        ? "opacity-100"
-                        : "opacity-0"
-                    )}
+                    className={cn('mr-2 h-4 w-4', selected.includes(option.value) ? 'opacity-100' : 'opacity-0')}
                   />
                   {option.label}
                 </CommandItem>
@@ -115,6 +89,7 @@ function MultiSelect({
 export interface MultiSelectProps {
   options: OptionType[];
   selected: string[];
+  disabled?: boolean;
   displayLabel?: boolean;
   onChange?: React.Dispatch<React.SetStateAction<string[]>>;
   onValueChange?: (value: Array<string>) => void;

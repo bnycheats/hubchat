@@ -1,7 +1,7 @@
 'use client';
 
 import { AiOutlineEllipsis } from 'react-icons/ai';
-
+import { Fragment, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,16 +11,21 @@ import {
 import { type Row } from '@tanstack/react-table';
 import { type User } from '@supabase/supabase-js';
 import Link from 'next/link';
-import { Fragment, useState } from 'react';
 import UserInfo from './user-info';
+import DisableUserAlert from './disable-user-alert';
+import EnableUserAlert from './enable-user-alert';
+import { type UserMetadata } from '@/utils/supabase/server/functions/types';
 
 function ActionMenu(props: ActionMenuProps) {
   const { row } = props;
-
+  const userMetaData = row.original.user_metadata as UserMetadata;
+  const [enableUserOpen, setEnableUserOpen] = useState(false);
+  const [disableUserOpen, setDisableUserOpen] = useState(false);
   const [viewUserInfoOpen, setViewUserInfoOpen] = useState(false);
-
   return (
     <Fragment>
+      <EnableUserAlert userId={row.original.id} open={enableUserOpen} closeAlert={() => setEnableUserOpen(false)} />
+      <DisableUserAlert userId={row.original.id} open={disableUserOpen} closeAlert={() => setDisableUserOpen(false)} />
       <UserInfo row={row} open={viewUserInfoOpen} close={() => setViewUserInfoOpen(false)} />
       <DropdownMenu>
         <DropdownMenuTrigger>
@@ -31,7 +36,11 @@ function ActionMenu(props: ActionMenuProps) {
           <Link href={`/users/${row.original.id}`}>
             <DropdownMenuItem>Update user</DropdownMenuItem>
           </Link>
-          <DropdownMenuItem>Disable user</DropdownMenuItem>
+          {userMetaData?.status ? (
+            <DropdownMenuItem onClick={() => setDisableUserOpen(true)}>Disable user</DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onClick={() => setEnableUserOpen(true)}>Enable user</DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </Fragment>
