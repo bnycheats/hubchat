@@ -1,6 +1,6 @@
 'use client';
 
-import { updatePassword } from '@/utils/supabase/client/functions';
+import { updatePassword } from '@/db/client/actions/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -42,19 +42,12 @@ export default function UpdatePasswordForm() {
 
   const updatePasswordMutation = useMutation({
     mutationFn: (request: z.infer<typeof FormSchema>) => updatePassword(request.newPassword),
-    onSuccess: (data) => {
-      if (data.error) {
-        toast({
-          variant: 'destructive',
-          title: data.error.message,
-        });
-      } else if (data.data.user) {
-        form.reset();
-        toast({
-          variant: 'success',
-          title: 'Your password has been updated successfully.',
-        });
-      }
+    onSuccess: () => {
+      form.reset();
+      toast({
+        variant: 'success',
+        title: 'Your password has been updated successfully.',
+      });
     },
     onError: (error) => {
       toast({

@@ -1,4 +1,4 @@
-import { type RolesEnums } from '@/helpers/types';
+import { type RolesEnums } from './types';
 
 export type UserMetadata = {
   first_name: string;

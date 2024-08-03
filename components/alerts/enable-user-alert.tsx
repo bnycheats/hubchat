@@ -7,7 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { updateUserById } from '@/utils/supabase/client/functions';
+import { updateUserById } from '@/db/client/actions/auth';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/components/ui/use-toast';
 import { type AlertDialogProps } from '@radix-ui/react-alert-dialog';
@@ -29,6 +29,7 @@ function EnableUserAlert(props: EnableUserAlertProps) {
       });
       closeAlert();
       queryClient.invalidateQueries({ queryKey: ['Users'] });
+      queryClient.invalidateQueries({ queryKey: ['User'] });
     },
     onError: (error: any) =>
       toast({

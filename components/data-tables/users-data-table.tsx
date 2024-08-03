@@ -2,33 +2,29 @@
 
 import { format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
-import { getUsers } from '@/utils/supabase/client/functions';
-import CustomPagination from '@/components/pagination';
+import { getUsers } from '@/db/client/queries/auth';
+import Pagination from '@/components/pagination';
 import DataTable from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
-import { type AuthError, type Pagination, type User } from '@supabase/supabase-js';
 import { useState } from 'react';
 import ActionMenu from '../action-menus/user-action-menu';
 import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
+import { useSearchParams } from 'next/navigation';
 
-function UsersDataTable(props: UsersDataTableProps) {
-  const [page, setPage] = useState(DEFAULT_PAGE);
+function UsersDataTable() {
+  const searchParams = useSearchParams();
+  const [page, setPage] = useState(Number(searchParams.get('page')) || DEFAULT_PAGE);
 
-  const { data, isFetching } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['Users', page],
     queryFn: () => getUsers(page, DEFAULT_SIZE),
-    initialData: props.initialData,
   });
-
-  const {
-    data: { users, total },
-  } = data as UsersResponse;
 
   return (
     <div>
       <DataTable
-        isLoading={isFetching}
-        data={users ?? []}
+        isLoading={isLoading}
+        data={data?.users ?? []}
         columns={[
           {
             header: 'Created',
@@ -63,9 +59,9 @@ function UsersDataTable(props: UsersDataTableProps) {
           },
         ]}
       />
-      <CustomPagination
+      <Pagination
         pageSize={DEFAULT_SIZE}
-        totalCount={total ?? 0}
+        totalCount={data?.total ?? 0}
         onPageChange={(page) => {
           setPage(page);
         }}
@@ -73,24 +69,5 @@ function UsersDataTable(props: UsersDataTableProps) {
     </div>
   );
 }
-
-type UsersResponse = {
-  data: {
-    users: User[];
-    aud: string;
-  } & Pagination;
-  error: null;
-};
-
-type UsersDataTableProps = {
-  initialData:
-    | UsersResponse
-    | {
-        data: {
-          users: [];
-        };
-        error: AuthError;
-      };
-};
 
 export default UsersDataTable;

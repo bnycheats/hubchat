@@ -16,6 +16,7 @@ function Header(props: PropsWithChildren) {
           <button
             aria-controls="sidebar"
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               setSidebarOpen(!sidebarOpen);
             }}

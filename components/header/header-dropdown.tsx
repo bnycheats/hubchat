@@ -13,7 +13,7 @@ import { Badge } from '../ui/badge';
 import Avatar from './avatar';
 
 import { createClient } from '@/utils/supabase/server';
-import { type UserMetadata } from '@/utils/supabase/server/functions/types';
+import { type UserMetadata } from '@/helpers/auth-types';
 import LogoutAction from './logout-action';
 
 export default async function HeaderDropdown() {

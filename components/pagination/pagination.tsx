@@ -5,7 +5,7 @@ import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 import usePagination, { DOTS } from './usePagination';
 import {
-  Pagination,
+  Pagination as ShadcnPagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/pagination';
 import { useEffect } from 'react';
 
-function CustomPagination(props: CustomPaginationProps) {
+function Pagination(props: PaginationProps) {
   const { onPageChange, totalCount, siblingCount = 1, pageSize } = props;
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -58,7 +58,7 @@ function CustomPagination(props: CustomPaginationProps) {
   }
 
   return (
-    <Pagination>
+    <ShadcnPagination>
       <PaginationContent>
         <PaginationItem
           className={cn({
@@ -97,15 +97,15 @@ function CustomPagination(props: CustomPaginationProps) {
           <PaginationNext onClick={onNext} />
         </PaginationItem>
       </PaginationContent>
-    </Pagination>
+    </ShadcnPagination>
   );
 }
 
-type CustomPaginationProps = {
+type PaginationProps = {
   onPageChange: (currentPage: number) => void;
   totalCount: number;
   siblingCount?: number;
   pageSize: number;
 };
 
-export default CustomPagination;
+export default Pagination;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -8,13 +8,44 @@ import Logo from '@/assets/logo.svg';
 import Image from 'next/image';
 import Menu, { type MenuModelType } from './menu';
 import usePrivateLayout from '@/hooks/usePrivateLayout';
+import { usePathname } from 'next/navigation';
 
 function Sidebar(props: SidebarProps) {
   const sidebar = useRef<any>(null);
   const trigger = useRef<any>(null);
+  const pathname = usePathname();
   const { model } = props;
 
   const { setSidebarOpen, sidebarOpen } = usePrivateLayout();
+
+  // close on click outside
+  useEffect(() => {
+    const clickHandler = ({ target }: MouseEvent) => {
+      if (!sidebar.current || !trigger.current) return;
+      if (!sidebarOpen || sidebar.current.contains(target) || trigger.current.contains(target)) return;
+      setSidebarOpen(false);
+    };
+    document.addEventListener('click', clickHandler);
+    return () => document.removeEventListener('click', clickHandler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // close if the esc key is pressed
+  useEffect(() => {
+    const keyHandler = ({ key }: KeyboardEvent) => {
+      if (!sidebarOpen || key !== 'Escape') return;
+      setSidebarOpen(false);
+    };
+    document.addEventListener('keydown', keyHandler);
+    return () => document.removeEventListener('keydown', keyHandler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  //close Sidebar menu if pathname change//
+  useEffect(() => {
+    if (sidebarOpen) setSidebarOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <aside
@@ -35,7 +66,9 @@ function Sidebar(props: SidebarProps) {
         </div>
         <button
           ref={trigger}
-          onClick={() => setSidebarOpen(!sidebarOpen)}
+          onClick={() => {
+            setSidebarOpen(!sidebarOpen);
+          }}
           aria-controls="sidebar"
           aria-expanded={sidebarOpen}
           className="block lg:hidden"

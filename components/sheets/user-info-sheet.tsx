@@ -4,7 +4,7 @@ import { DialogProps } from '@radix-ui/react-dialog';
 import { type Row } from '@tanstack/react-table';
 import { type User } from '@supabase/supabase-js';
 import { Table, TableBody, TableRow, TableCell } from '@/components/ui/table';
-import { type UserMetadata } from '@/utils/supabase/server/functions/types';
+import { type UserMetadata } from '@/helpers/auth-types';
 import { Badge } from '@/components/ui/badge';
 
 function UserInfoSheet(props: UserInfoSheetProps) {

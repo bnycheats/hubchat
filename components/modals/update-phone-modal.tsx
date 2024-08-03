@@ -1,6 +1,6 @@
 'use client';
 
-import { updateProfileUserMetaData } from '@/utils/supabase/client/functions';
+import { updateProfileUserMetaData } from '@/db/client/actions/auth';
 import useAuth from '@/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type DialogProps } from '@radix-ui/react-dialog';
@@ -14,7 +14,7 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { type UserMetadata } from '@/utils/supabase/server/functions/types';
+import { type UserMetadata } from '@/helpers/auth-types';
 
 const FormSchema = z.object({
   phone_number: z.string().min(1, { message: 'This field is required' }),

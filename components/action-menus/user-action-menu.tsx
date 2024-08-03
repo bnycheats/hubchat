@@ -14,7 +14,7 @@ import Link from 'next/link';
 import UserInfo from '../sheets/user-info-sheet';
 import DisableUserAlert from '../alerts/disable-user-alert';
 import EnableUserAlert from '../alerts/enable-user-alert';
-import { type UserMetadata } from '@/utils/supabase/server/functions/types';
+import { type UserMetadata } from '@/helpers/auth-types';
 
 function UserActionMenu(props: UserActionMenuProps) {
   const { row } = props;

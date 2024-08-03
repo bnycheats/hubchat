@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { signIn } from '@/utils/supabase/server/functions';
+import { signIn } from '@/db/server/actions/auth';
 
 import Password from '@/components/password';
 import Spinner from '@/components/spinner';
@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { Fragment } from 'react';
 import Link from 'next/link';
 
 const FormSchema = z.object({

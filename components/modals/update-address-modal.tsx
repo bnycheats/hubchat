@@ -1,7 +1,7 @@
 'use client';
 
 import provinces from '@/constants/provinces';
-import { updateProfileUserMetaData } from '@/utils/supabase/client/functions';
+import { updateProfileUserMetaData } from '@/db/client/actions/auth';
 import useAuth from '@/hooks/useAuth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type DialogProps } from '@radix-ui/react-dialog';
@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import { type UserMetadata } from '@/utils/supabase/server/functions/types';
+import { UserMetadata } from '@/helpers/auth-types';
 
 const FormSchema = z.object({
   street: z.string().min(1, { message: 'This field is required' }),

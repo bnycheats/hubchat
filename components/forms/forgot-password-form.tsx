@@ -1,6 +1,6 @@
 'use client';
 
-import { forgotPassword } from '@/utils/supabase/client/functions';
+import { forgotPassword } from '@/db/client/actions/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -30,19 +30,12 @@ export default function ForgotPasswordForm() {
 
   const forgotPasswordMutation = useMutation({
     mutationFn: (request: z.infer<typeof FormSchema>) => forgotPassword(request.email),
-    onSuccess: (data) => {
-      if (data.error) {
-        toast({
-          variant: 'destructive',
-          title: data.error.message,
-        });
-      } else if (data.data) {
-        form.reset();
-        toast({
-          variant: 'success',
-          title: 'Password reset email sent. Please check your inbox.',
-        });
-      }
+    onSuccess: () => {
+      form.reset();
+      toast({
+        variant: 'success',
+        title: 'Password reset email sent. Please check your inbox.',
+      });
     },
     onError: (error) => {
       toast({

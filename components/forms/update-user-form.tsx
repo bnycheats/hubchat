@@ -1,30 +1,29 @@
 'use client';
 
 import provinces from '@/constants/provinces';
-import { updateUserById } from '@/utils/supabase/client/functions';
+import { updateUserById } from '@/db/client/actions/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
-import roles from '@/constants/roles';
-
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { MultiSelect } from '@/components/ui/multi-select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
 import TooltipInfo from '@/components/tooltip-info';
-import { type User } from '@supabase/supabase-js';
 import Spinner from '@/components/spinner';
 import Message from '@/components/message';
-import { type UserMetadata } from '@/utils/supabase/server/functions/types';
+import { type UserMetadata } from '@/helpers/auth-types';
+import { notFound, useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { getUser } from '@/db/client/queries/auth';
 
 const FormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -41,16 +40,21 @@ const FormSchema = z.object({
 });
 
 export default function UpdateUserForm(props: UpdateUserFormProps) {
-  const { user } = props;
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
-  const { dob, status, ...other } = user.user_metadata as UserMetadata;
+  const { data, isLoading } = useQuery({
+    queryKey: ['User', props.userId],
+    queryFn: () => getUser(props.userId),
+  });
+
+  const userMetaData = data?.user?.user_metadata as UserMetadata;
 
   const defaultValues: z.infer<typeof FormSchema> = {
-    ...other,
-    dob: new Date(dob),
-    email: user?.email ?? '',
+    ...userMetaData,
+    dob: userMetaData ? new Date(userMetaData.dob) : new Date(),
+    email: data?.user?.email ?? '',
   };
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -60,18 +64,20 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
 
   const updateUserMutation = useMutation({
     mutationFn: (request: z.infer<typeof FormSchema>) => {
-      return updateUserById(user.id, { user_metadata: request });
+      return updateUserById(data?.user?.id ?? '', { user_metadata: request });
     },
     onSuccess: () => {
       toast({
         variant: 'success',
         title: 'User details updated successfully',
       });
+      router.refresh();
       form.reset(form.watch(), {
         keepValues: false,
         keepDirty: false,
         keepDefaultValues: false,
       });
+      queryClient.invalidateQueries({ queryKey: ['Users'] });
       queryClient.invalidateQueries({ queryKey: ['User'] });
     },
     onError: (error: any) =>
@@ -83,7 +89,9 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
 
   const onPressSubmit: SubmitHandler<z.infer<typeof FormSchema>> = (payload) => updateUserMutation.mutate(payload);
 
-  if (!status) {
+  if (!data?.user) return notFound();
+
+  if (!userMetaData?.status) {
     return (
       <Message title="User Disabled" message="User has been disabled. Please contact support for more information." />
     );
@@ -91,7 +99,7 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
 
   return (
     <Form {...form}>
-      {updateUserMutation.isPending && <Spinner centered fullScreen />}
+      {(updateUserMutation.isPending || isLoading) && <Spinner centered fullScreen />}
       <form className="mt-4 grid grid-cols-2 gap-6" onSubmit={form.handleSubmit(onPressSubmit)}>
         <FormField
           control={form.control}
@@ -157,22 +165,6 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
             <FormItem>
               <FormLabel>Last name</FormLabel>
               <Input {...field} placeholder="Last name*" />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="user_role"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex justify-between mt-2">
-                Roles
-                <Button type="button" variant="link" className="p-0 h-auto">
-                  Edit roles
-                </Button>
-              </FormLabel>
-              <MultiSelect disabled options={roles} selected={field.value ?? []} onChange={field.onChange} />
               <FormMessage />
             </FormItem>
           )}
@@ -245,5 +237,5 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
 }
 
 type UpdateUserFormProps = {
-  user: User;
+  userId: string;
 };

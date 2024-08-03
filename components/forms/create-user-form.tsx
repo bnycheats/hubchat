@@ -1,7 +1,7 @@
 'use client';
 
 import provinces from '@/constants/provinces';
-import { createUser } from '@/utils/supabase/server/functions';
+import { createUser } from '@/db/client/actions/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
