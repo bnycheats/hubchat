@@ -4,7 +4,7 @@ import { AiOutlineAppstore, AiOutlineTeam } from 'react-icons/ai';
 import Header from '@/components/header';
 import { type MenuModelType } from '@/components/menu';
 import Sidebar from '@/components/sidebar';
-import PrivateProvider from '@/context/private-provider';
+import PrivateProvider from '@/providers/private-provider';
 import { HeaderDropdown } from '@/components/header';
 
 /**

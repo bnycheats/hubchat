@@ -28,7 +28,7 @@ function Sidebar(props: SidebarProps) {
     document.addEventListener('click', clickHandler);
     return () => document.removeEventListener('click', clickHandler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   // close if the esc key is pressed
   useEffect(() => {
@@ -39,7 +39,7 @@ function Sidebar(props: SidebarProps) {
     document.addEventListener('keydown', keyHandler);
     return () => document.removeEventListener('keydown', keyHandler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   //close Sidebar menu if pathname change//
   useEffect(() => {

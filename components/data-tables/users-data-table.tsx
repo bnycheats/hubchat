@@ -16,15 +16,16 @@ function UsersDataTable() {
   const searchParams = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get('page')) || DEFAULT_PAGE);
 
-  const { data, isLoading } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ['Users', page],
     queryFn: () => getUsers(page, DEFAULT_SIZE),
+    placeholderData: (previousData) => previousData,
   });
 
   return (
     <div>
       <DataTable
-        isLoading={isLoading}
+        isLoading={isFetching}
         data={data?.users ?? []}
         columns={[
           {

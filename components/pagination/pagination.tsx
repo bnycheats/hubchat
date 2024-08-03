@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import usePagination, { DOTS } from './usePagination';
 import {
@@ -17,9 +17,7 @@ import { useEffect } from 'react';
 
 function Pagination(props: PaginationProps) {
   const { onPageChange, totalCount, siblingCount = 1, pageSize } = props;
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { push } = useRouter();
   const currentPage = Number(searchParams.get('page')) || 1;
 
   const pages = usePagination({
@@ -32,7 +30,7 @@ function Pagination(props: PaginationProps) {
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', pageNumber.toString());
-    return push(`${pathname}?${params.toString()}`);
+    return window.history.pushState(null, '', `?${params.toString()}`);
   };
 
   const onNext = () => {

@@ -1,10 +1,10 @@
 import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 
-import QueryProvider from '@/context/query-provider';
+import QueryProvider from '@/providers/query-provider';
 import './globals.css';
 import 'react-day-picker/dist/style.css';
-import AuthProvider from '@/context/auth-provider';
+import AuthProvider from '@/providers/auth-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
