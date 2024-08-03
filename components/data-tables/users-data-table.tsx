@@ -10,6 +10,7 @@ import { useState } from 'react';
 import ActionMenu from '../action-menus/user-action-menu';
 import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
 import { useSearchParams } from 'next/navigation';
+import { type UserMetadata } from '@/helpers/auth-types';
 
 function UsersDataTable() {
   const searchParams = useSearchParams();
@@ -33,11 +34,11 @@ function UsersDataTable() {
           },
           {
             header: 'First name',
-            accessorKey: 'user_metadata.first_name',
+            accessorFn: (originalRow) => (originalRow.user_metadata as UserMetadata).first_name,
           },
           {
             header: 'Last name',
-            accessorKey: 'user_metadata.last_name',
+            accessorFn: (originalRow) => (originalRow.user_metadata as UserMetadata).last_name,
           },
           {
             header: 'Email',
@@ -45,7 +46,7 @@ function UsersDataTable() {
           },
           {
             header: 'Status',
-            accessorKey: 'user_metadata.status',
+            accessorFn: (originalRow) => (originalRow.user_metadata as UserMetadata).status,
             cell: ({ cell }) => (
               <Badge variant={cell.getValue() ? 'default' : 'destructive'}>
                 {cell.getValue() ? 'Active' : 'Disabled'}
