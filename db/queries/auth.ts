@@ -1,9 +1,6 @@
-'use server';
+import { type SupabaseClient } from '@supabase/supabase-js';
 
-import { createClient } from '@/utils/supabase/server';
-
-export async function getUsers(page: number, perPage: number) {
-  const supabase = createClient();
+export async function getUsers(supabase: SupabaseClient, page: number, perPage: number) {
   try {
     const { error, data } = await supabase.auth.admin.listUsers({ page, perPage });
     if (error) {
@@ -16,8 +13,7 @@ export async function getUsers(page: number, perPage: number) {
   }
 }
 
-export async function getUser(userId: string) {
-  const supabase = createClient();
+export async function getUser(supabase: SupabaseClient, userId: string) {
   try {
     const { error, data } = await supabase.auth.admin.getUserById(userId);
     if (error) {

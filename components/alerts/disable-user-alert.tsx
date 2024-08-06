@@ -7,7 +7,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { updateUserById } from '@/db/client/actions/auth';
+import { updateUserById } from '@/db/actions/auth';
+import { createClient } from '@/utils/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/components/ui/use-toast';
 import { type AlertDialogProps } from '@radix-ui/react-alert-dialog';
@@ -16,12 +17,13 @@ import { type AdminUserAttributes } from '@supabase/supabase-js';
 
 function DisableUserAlert(props: DisableUserAlertProps) {
   const { userId, closeAlert, ...other } = props;
+  const supabase = createClient();
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const disableUserMutation = useMutation({
-    mutationFn: (request: AdminUserAttributes) => updateUserById(userId, request),
+    mutationFn: (request: AdminUserAttributes) => updateUserById(supabase, userId, request),
     onSuccess: () => {
       toast({
         variant: 'success',

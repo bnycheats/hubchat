@@ -1,6 +1,7 @@
 'use client';
 
-import { forgotPassword } from '@/db/client/actions/auth';
+import { forgotPassword } from '@/db/actions/auth';
+import { createClient } from '@/utils/supabase/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -19,6 +20,7 @@ const FormSchema = z.object({
 
 export default function ForgotPasswordForm() {
   const { toast } = useToast();
+  const supabase = createClient();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -29,7 +31,7 @@ export default function ForgotPasswordForm() {
   });
 
   const forgotPasswordMutation = useMutation({
-    mutationFn: (request: z.infer<typeof FormSchema>) => forgotPassword(request.email),
+    mutationFn: (request: z.infer<typeof FormSchema>) => forgotPassword(supabase, request.email),
     onSuccess: () => {
       form.reset();
       toast({

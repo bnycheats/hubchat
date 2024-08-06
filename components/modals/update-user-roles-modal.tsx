@@ -1,6 +1,7 @@
 'use client';
 
-import { updateUserRoles } from '@/db/client/actions/auth';
+import { updateUserRoles } from '@/db/actions/auth';
+import { createClient } from '@/utils/supabase/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type DialogProps } from '@radix-ui/react-dialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -24,6 +25,7 @@ function UpdateUserRolesModal(props: UpdateUserRolesModalProps) {
   const { closeModal, userRoles, userId, ...other } = props;
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const supabase = createClient();
 
   const defaultValues: z.infer<typeof FormSchema> = {
     user_role: userRoles,
@@ -36,7 +38,7 @@ function UpdateUserRolesModal(props: UpdateUserRolesModalProps) {
 
   const updateUserRolesMutation = useMutation({
     mutationFn: (request: z.infer<typeof FormSchema>) =>
-      updateUserRoles(userId, request.user_role as Array<RolesEnums>),
+      updateUserRoles(supabase, userId, request.user_role as Array<RolesEnums>),
     onSuccess: () => {
       toast({
         variant: 'success',

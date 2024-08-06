@@ -1,11 +1,11 @@
 'use client';
 
-import { updatePassword } from '@/db/client/actions/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
-
+import { updatePassword } from '@/db/actions/auth';
+import { createClient } from '@/utils/supabase/client';
 import Password from '@/components/password';
 import Spinner from '@/components/spinner';
 import { Button } from '@/components/ui/button';
@@ -29,6 +29,7 @@ const FormSchema = z
 
 export default function UpdatePasswordForm() {
   const { toast } = useToast();
+  const supabase = createClient();
 
   const defaultValues: z.infer<typeof FormSchema> = {
     newPassword: '',
@@ -41,7 +42,7 @@ export default function UpdatePasswordForm() {
   });
 
   const updatePasswordMutation = useMutation({
-    mutationFn: (request: z.infer<typeof FormSchema>) => updatePassword(request.newPassword),
+    mutationFn: (request: z.infer<typeof FormSchema>) => updatePassword(supabase, request.newPassword),
     onSuccess: () => {
       form.reset();
       toast({

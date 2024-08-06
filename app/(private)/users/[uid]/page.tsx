@@ -2,19 +2,22 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { AiOutlineEye } from 'react-icons/ai';
 import { notFound } from 'next/navigation';
-import { getUser } from '@/db/server/queries/auth';
+import { getUser } from '@/db/queries/auth';
+import { createClient } from '@/utils/supabase/server';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import UpdateUserForm from '@/components/forms/update-user-form';
 import UpdateRolesButton from '@/components/buttons/update-roles-button';
+import DisableUserButton from '@/components/buttons/disable-user-button';
 
 export default async function UpdateUserPage(props: UpdateUserPageProps) {
   try {
     const { params } = props;
     const queryClient = new QueryClient();
+    const supabase = createClient();
 
     await queryClient.prefetchQuery({
       queryKey: ['User', params.uid],
-      queryFn: () => getUser(params.uid),
+      queryFn: () => getUser(supabase, params.uid),
     });
 
     return (
@@ -29,8 +32,10 @@ export default async function UpdateUserPage(props: UpdateUserPageProps) {
                 </Button>
               </Link>
             </div>
-            <UpdateRolesButton userId={params.uid} />
-            {/* {user?.active && <DisableButton />} */}
+            <div className="flex gap-2">
+              <UpdateRolesButton userId={params.uid} />
+              <DisableUserButton userId={params.uid} />
+            </div>
           </div>
           <UpdateUserForm userId={params.uid} />
         </section>

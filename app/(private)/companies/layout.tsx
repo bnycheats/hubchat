@@ -4,11 +4,11 @@ import { Metadata } from 'next';
 /**
  * The Layout is needed to specify the page title and meta tags.
  */
-export default function LoginLayout({ children }: { children: ReactNode }) {
+export default function CompaniesLayout({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
 export const metadata: Metadata = {
-  title: 'Login',
+  title: 'Companies',
   robots: 'noindex',
 };

@@ -4,8 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { signIn } from '@/db/server/actions/auth';
-
+import { login } from '@/app/(public)/(auth)/login/actions';
 import Password from '@/components/password';
 import Spinner from '@/components/spinner';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,7 @@ import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const FormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -24,6 +24,7 @@ const FormSchema = z.object({
 
 export default function LoginForm() {
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -34,7 +35,7 @@ export default function LoginForm() {
   });
 
   const loginMutation = useMutation({
-    mutationFn: (request: z.infer<typeof FormSchema>) => signIn(request.email, request.password),
+    mutationFn: (request: z.infer<typeof FormSchema>) => login(request.email, request.password),
     onError: (error) => {
       toast({
         variant: 'destructive',

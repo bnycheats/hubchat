@@ -2,7 +2,8 @@
 
 import { format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
-import { getUsers } from '@/db/client/queries/auth';
+import { getUsers } from '@/db/queries/auth';
+import { createClient } from '@/utils/supabase/client';
 import Pagination from '@/components/pagination';
 import DataTable from '@/components/data-table';
 import { Badge } from '@/components/ui/badge';
@@ -14,11 +15,13 @@ import { type UserMetadata } from '@/helpers/auth-types';
 
 function UsersDataTable() {
   const searchParams = useSearchParams();
+  const supabase = createClient();
+
   const [page, setPage] = useState(Number(searchParams.get('page')) || DEFAULT_PAGE);
 
   const { data, isFetching } = useQuery({
     queryKey: ['Users', page],
-    queryFn: () => getUsers(page, DEFAULT_SIZE),
+    queryFn: () => getUsers(supabase, page, DEFAULT_SIZE),
     placeholderData: (previousData) => previousData,
   });
 

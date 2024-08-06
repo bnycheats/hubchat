@@ -1,7 +1,6 @@
 'use client';
 
 import provinces from '@/constants/provinces';
-import { createUser } from '@/db/client/actions/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -24,6 +23,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { RolesEnums } from '@/helpers/types';
 import { useRouter } from 'next/navigation';
 import Password from '@/components/password';
+import { createUser } from '@/db/actions/auth';
+import { createClient } from '@/utils/supabase/client';
 
 const FormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -46,6 +47,7 @@ export default function CreateUserForm() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const router = useRouter();
+  const supabase = createClient();
 
   const defaultValues: z.infer<typeof FormSchema> = {
     email: '',
@@ -69,6 +71,7 @@ export default function CreateUserForm() {
     mutationFn: (request: z.infer<typeof FormSchema>) => {
       const { email, user_role, dob, password, ...other } = request;
       return createUser(
+        supabase,
         {
           email,
           password,

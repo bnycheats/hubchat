@@ -1,12 +1,14 @@
 import { useMutation } from '@tanstack/react-query';
-import { signOut } from '@/db/server/actions/auth';
+import { logout } from '@/app/(public)/(auth)/login/actions';
 import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 function useLogout() {
   const { toast } = useToast();
+  const router = useRouter();
 
   const logoutMutation = useMutation({
-    mutationFn: () => signOut(),
+    mutationFn: () => logout(),
     onError: (error) => {
       toast({
         variant: 'destructive',

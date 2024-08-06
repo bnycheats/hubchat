@@ -6,19 +6,21 @@ import { Button } from '@/components/ui/button';
 import UpdateUserRolesModal from '../modals/update-user-roles-modal';
 import { type UserMetadata } from '@/helpers/auth-types';
 import { useQuery } from '@tanstack/react-query';
-import { getUser } from '@/db/client/queries/auth';
+import { getUser } from '@/db/queries/auth';
+import { createClient } from '@/utils/supabase/client';
 
 export default function UpdateRolesButton(props: UpdateRolesButtonProps) {
+  const supabase = createClient();
   const [updateUserRolesOpen, setUpdateUserRolesOpen] = useState(false);
 
   const { data } = useQuery({
     queryKey: ['User', props.userId],
-    queryFn: () => getUser(props.userId),
+    queryFn: () => getUser(supabase, props.userId),
   });
 
   const userMetaData = data?.user?.user_metadata as UserMetadata;
 
-  if (!userMetaData?.user_role) return null;
+  if (!userMetaData?.status || !userMetaData?.user_role) return null;
 
   return (
     <Fragment>

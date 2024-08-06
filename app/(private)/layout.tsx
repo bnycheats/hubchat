@@ -1,5 +1,5 @@
 import { type PropsWithChildren } from 'react';
-import { AiOutlineAppstore, AiOutlineTeam } from 'react-icons/ai';
+import { AiOutlineAppstore, AiOutlineTeam, AiOutlineBank } from 'react-icons/ai';
 
 import Header from '@/components/header';
 import { type MenuModelType } from '@/components/menu';
@@ -44,6 +44,12 @@ function getMenus(): MenuModelType[] {
           to: '/users',
           label: 'Users',
           icon: <AiOutlineTeam />,
+        },
+        {
+          itemKey: 'companies',
+          to: '/companies',
+          label: 'Companies',
+          icon: <AiOutlineBank />,
         },
       ],
     },

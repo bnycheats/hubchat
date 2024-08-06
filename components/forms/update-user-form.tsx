@@ -1,7 +1,6 @@
 'use client';
 
 import provinces from '@/constants/provinces';
-import { updateUserById } from '@/db/client/actions/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
@@ -23,7 +22,9 @@ import Message from '@/components/message';
 import { type UserMetadata } from '@/helpers/auth-types';
 import { notFound, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { getUser } from '@/db/client/queries/auth';
+import { getUser } from '@/db/queries/auth';
+import { updateUserById } from '@/db/actions/auth';
+import { createClient } from '@/utils/supabase/client';
 
 const FormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -43,10 +44,11 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const router = useRouter();
+  const supabase = createClient();
 
   const { data, isLoading } = useQuery({
     queryKey: ['User', props.userId],
-    queryFn: () => getUser(props.userId),
+    queryFn: () => getUser(supabase, props.userId),
   });
 
   const userMetaData = data?.user?.user_metadata as UserMetadata;
@@ -64,7 +66,7 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
 
   const updateUserMutation = useMutation({
     mutationFn: (request: z.infer<typeof FormSchema>) => {
-      return updateUserById(data?.user?.id ?? '', { user_metadata: request });
+      return updateUserById(supabase, data?.user?.id ?? '', { user_metadata: request });
     },
     onSuccess: () => {
       toast({
@@ -83,7 +85,7 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
     onError: (error: any) =>
       toast({
         variant: 'destructive',
-        title: `Error updating user details: ${error}`,
+        title: error.message,
       }),
   });
 
