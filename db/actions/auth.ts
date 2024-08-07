@@ -1,42 +1,6 @@
 import type { SupabaseClient, AdminUserAttributes } from '@supabase/supabase-js';
-import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import type { UserMetadata, Credential } from '@/helpers/auth-types';
 import { RolesEnums } from '@/helpers/types';
-
-export async function signIn(supabase: SupabaseClient, email: string, password: string) {
-  let redirectPath: string | null = null;
-  try {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      throw error;
-    }
-    revalidatePath('/', 'layout');
-    redirectPath = '/dashboard';
-  } catch (e) {
-    console.log(e);
-    throw e;
-  } finally {
-    if (redirectPath) redirect(redirectPath);
-  }
-}
-
-export async function signOut(supabase: SupabaseClient) {
-  let redirectPath: string | null = null;
-  try {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      throw error;
-    }
-    revalidatePath('/', 'layout');
-    redirectPath = '/login';
-  } catch (e) {
-    console.log(e);
-    throw e;
-  } finally {
-    if (redirectPath) redirect(redirectPath);
-  }
-}
 
 export async function forgotPassword(supabase: SupabaseClient, email: string) {
   try {

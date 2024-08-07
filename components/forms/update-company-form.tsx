@@ -12,25 +12,33 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/components/ui/use-toast';
 import Spinner from '@/components/spinner';
 import convertAmountToCents from '@/utils/convertAmountToCents';
-import { createCompany } from '@/db/actions/companies';
+import convertCentsToAmount from '@/utils/convertCentsToAmount';
+import { updateCompany } from '@/db/actions/companies';
+import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase/client';
-import { CompanyFormSchema } from '@/helpers/company-types';
+import Message from '@/components/message';
+import { CompanyFormSchema, type CompanyResponse } from '@/helpers/company-types';
+import { getCompany } from '@/db/queries/companies';
+import { notFound } from 'next/navigation';
 
-export default function CreateCompanyForm() {
+export default function UpdateCompanyForm(props: UpdateCompanyFormProps) {
+  const { companyId } = props;
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const supabase = createClient();
 
+  const { data, isLoading } = useQuery({
+    queryKey: ['Company', props.companyId],
+    queryFn: () => getCompany(supabase, props.companyId),
+  });
+
+  const company = data as CompanyResponse;
+
   const defaultValues: z.infer<typeof CompanyFormSchema> = {
-    owner_name: '',
-    company_name: '',
-    currency: '',
-    commission_rate: '',
-    expenses_rate: '',
-    over_time_rate: '',
-    per_hour_rate: '',
-    per_day_rate: '',
-    per_month_rate: '',
+    ...company,
+    per_day_rate: convertCentsToAmount(Number(company.per_day_rate)),
+    per_hour_rate: convertCentsToAmount(Number(company.per_hour_rate)),
+    per_month_rate: convertCentsToAmount(Number(company.per_month_rate)),
   };
 
   const form = useForm<z.infer<typeof CompanyFormSchema>>({
@@ -38,15 +46,20 @@ export default function CreateCompanyForm() {
     defaultValues,
   });
 
-  const createCompanyMutation = useMutation({
-    mutationFn: (payload: z.infer<typeof CompanyFormSchema>) => createCompany(supabase, payload),
+  const updateCompanyMutation = useMutation({
+    mutationFn: (payload: z.infer<typeof CompanyFormSchema>) => updateCompany(supabase, companyId, payload),
     onSuccess: () => {
       toast({
         variant: 'success',
-        title: 'Company created successfully',
+        title: 'Company updated successfully',
       });
-      form.reset();
+      form.reset(form.watch(), {
+        keepValues: false,
+        keepDirty: false,
+        keepDefaultValues: false,
+      });
       queryClient.invalidateQueries({ queryKey: ['Companies'] });
+      queryClient.invalidateQueries({ queryKey: ['Company'] });
     },
     onError: (error: any) =>
       toast({
@@ -56,16 +69,27 @@ export default function CreateCompanyForm() {
   });
 
   const onPressSubmit: SubmitHandler<z.infer<typeof CompanyFormSchema>> = (payload) =>
-    createCompanyMutation.mutate({
+    updateCompanyMutation.mutate({
       ...payload,
       per_day_rate: convertAmountToCents(Number(payload.per_day_rate)),
       per_hour_rate: convertAmountToCents(Number(payload.per_hour_rate)),
       per_month_rate: convertAmountToCents(Number(payload.per_month_rate)),
     });
 
+  if (!data) return notFound();
+
+  if (!data.status) {
+    return (
+      <Message
+        title="Company Disabled"
+        message="Company has been disabled. Please contact support for more information."
+      />
+    );
+  }
+
   return (
     <Form {...form}>
-      {createCompanyMutation.isPending && <Spinner centered fullScreen />}
+      {(updateCompanyMutation.isPending || isLoading) && <Spinner centered fullScreen />}
       <form className="mt-4 grid grid-cols-2 gap-6" onSubmit={form.handleSubmit(onPressSubmit)}>
         <FormField
           control={form.control}
@@ -199,10 +223,14 @@ export default function CreateCompanyForm() {
         />
         <div className="col-span-2 flex justify-end gap-3">
           <Button className="rounded-full w-28" type="submit" disabled={!form.formState.isDirty}>
-            Create
+            Update
           </Button>
         </div>
       </form>
     </Form>
   );
 }
+
+type UpdateCompanyFormProps = {
+  companyId: string;
+};

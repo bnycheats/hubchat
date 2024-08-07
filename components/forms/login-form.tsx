@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { login } from '@/app/(public)/(auth)/login/actions';
+import { signIn } from '@/app/(public)/(auth)/login/actions';
 import Password from '@/components/password';
 import Spinner from '@/components/spinner';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,7 @@ export default function LoginForm() {
   });
 
   const loginMutation = useMutation({
-    mutationFn: (request: z.infer<typeof FormSchema>) => login(request.email, request.password),
+    mutationFn: (request: z.infer<typeof FormSchema>) => signIn(request.email, request.password),
     onError: (error) => {
       toast({
         variant: 'destructive',

@@ -20,11 +20,12 @@ import TooltipInfo from '@/components/tooltip-info';
 import Spinner from '@/components/spinner';
 import Message from '@/components/message';
 import { type UserMetadata } from '@/helpers/auth-types';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getUser } from '@/db/queries/auth';
 import { updateUserById } from '@/db/actions/auth';
 import { createClient } from '@/utils/supabase/client';
+import { type User } from '@supabase/supabase-js';
 
 const FormSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -43,7 +44,6 @@ const FormSchema = z.object({
 export default function UpdateUserForm(props: UpdateUserFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const router = useRouter();
   const supabase = createClient();
 
   const { data, isLoading } = useQuery({
@@ -51,7 +51,8 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
     queryFn: () => getUser(supabase, props.userId),
   });
 
-  const userMetaData = data?.user?.user_metadata as UserMetadata;
+  const user = data?.user as User;
+  const userMetaData = user?.user_metadata as UserMetadata;
 
   const defaultValues: z.infer<typeof FormSchema> = {
     ...userMetaData,
@@ -66,14 +67,13 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
 
   const updateUserMutation = useMutation({
     mutationFn: (request: z.infer<typeof FormSchema>) => {
-      return updateUserById(supabase, data?.user?.id ?? '', { user_metadata: request });
+      return updateUserById(supabase, user.id ?? '', { user_metadata: request });
     },
     onSuccess: () => {
       toast({
         variant: 'success',
         title: 'User details updated successfully',
       });
-      router.refresh();
       form.reset(form.watch(), {
         keepValues: false,
         keepDirty: false,
@@ -91,9 +91,9 @@ export default function UpdateUserForm(props: UpdateUserFormProps) {
 
   const onPressSubmit: SubmitHandler<z.infer<typeof FormSchema>> = (payload) => updateUserMutation.mutate(payload);
 
-  if (!data?.user) return notFound();
+  if (!user) return notFound();
 
-  if (!userMetaData?.status) {
+  if (!userMetaData.status) {
     return (
       <Message title="User Disabled" message="User has been disabled. Please contact support for more information." />
     );
