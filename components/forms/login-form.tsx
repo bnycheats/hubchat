@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { signIn } from '@/app/(public)/(auth)/login/actions';
+import { signIn } from '@/db/actions/auth-server';
 import Password from '@/components/password';
 import Spinner from '@/components/spinner';
 import { Button } from '@/components/ui/button';

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { signOut } from '@/app/(public)/(auth)/login/actions';
+import { signOut } from '@/db/actions/auth-server';
 import { useToast } from '@/components/ui/use-toast';
 
 function useLogout() {

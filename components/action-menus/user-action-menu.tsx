@@ -33,6 +33,9 @@ function UserActionMenu(props: UserActionMenuProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setViewUserInfoOpen(true)}>View user info</DropdownMenuItem>
+          <Link href={`/users/${row.original.id}/accounts`}>
+            <DropdownMenuItem>View user accounts</DropdownMenuItem>
+          </Link>
           <Link href={`/users/${row.original.id}`}>
             <DropdownMenuItem>Update user</DropdownMenuItem>
           </Link>

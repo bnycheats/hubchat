@@ -3,6 +3,7 @@ import { getCompany } from '@/db/queries/companies';
 import { createClient } from '@/utils/supabase/server';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import UpdateCompanyForm from '@/components/forms/update-company-form';
+import DisableCompanyButton from '@/components/buttons/disable-company-button';
 
 export default async function UpdateCompanyPage(props: UpdateCompanyPageProps) {
   try {
@@ -18,7 +19,10 @@ export default async function UpdateCompanyPage(props: UpdateCompanyPageProps) {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
         <section>
-          <h2 className="text-3xl mb-6">Update Company</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl">Update Company</h2>
+            <DisableCompanyButton companyId={params.uid} />
+          </div>
           <UpdateCompanyForm companyId={params.uid} />
         </section>
       </HydrationBoundary>

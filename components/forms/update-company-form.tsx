@@ -22,7 +22,6 @@ import { getCompany } from '@/db/queries/companies';
 import { notFound } from 'next/navigation';
 
 export default function UpdateCompanyForm(props: UpdateCompanyFormProps) {
-  const { companyId } = props;
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const supabase = createClient();
@@ -47,7 +46,7 @@ export default function UpdateCompanyForm(props: UpdateCompanyFormProps) {
   });
 
   const updateCompanyMutation = useMutation({
-    mutationFn: (payload: z.infer<typeof CompanyFormSchema>) => updateCompany(supabase, companyId, payload),
+    mutationFn: (payload: z.infer<typeof CompanyFormSchema>) => updateCompany(supabase, props.companyId, payload),
     onSuccess: () => {
       toast({
         variant: 'success',
@@ -71,6 +70,7 @@ export default function UpdateCompanyForm(props: UpdateCompanyFormProps) {
   const onPressSubmit: SubmitHandler<z.infer<typeof CompanyFormSchema>> = (payload) =>
     updateCompanyMutation.mutate({
       ...payload,
+      over_time_rate: convertAmountToCents(Number(payload.over_time_rate)),
       per_day_rate: convertAmountToCents(Number(payload.per_day_rate)),
       per_hour_rate: convertAmountToCents(Number(payload.per_hour_rate)),
       per_month_rate: convertAmountToCents(Number(payload.per_month_rate)),
