@@ -36,6 +36,14 @@ export default function LoginForm() {
 
   const loginMutation = useMutation({
     mutationFn: (request: z.infer<typeof FormSchema>) => signIn(request.email, request.password),
+    onSuccess: (data) => {
+      if (data?.error) {
+        toast({
+          variant: 'destructive',
+          title: data.error.message,
+        });
+      }
+    },
     onError: (error) => {
       toast({
         variant: 'destructive',

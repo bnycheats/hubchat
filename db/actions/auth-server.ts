@@ -10,13 +10,13 @@ export async function signIn(email: string, password: string) {
   try {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      throw error;
+      return { error: { message: error.message } };
     }
     revalidatePath('/', 'layout');
     redirectPath = '/dashboard';
   } catch (e) {
     console.log(e);
-    throw e;
+    return { error: { message: 'An unknown error occurred. Please try again.' } };
   } finally {
     if (redirectPath) redirect(redirectPath);
   }
@@ -28,13 +28,13 @@ export async function signOut() {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      throw error;
+      return { error: { message: error.message } };
     }
     revalidatePath('/', 'layout');
     redirectPath = '/login';
   } catch (e) {
     console.log(e);
-    throw e;
+    return { error: { message: 'An unknown error occurred. Please try again.' } };
   } finally {
     if (redirectPath) redirect(redirectPath);
   }

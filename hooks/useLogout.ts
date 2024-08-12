@@ -7,6 +7,14 @@ function useLogout() {
 
   const logoutMutation = useMutation({
     mutationFn: () => signOut(),
+    onSuccess: (data) => {
+      if (data?.error) {
+        toast({
+          variant: 'destructive',
+          title: data.error.message,
+        });
+      }
+    },
     onError: (error) => {
       toast({
         variant: 'destructive',
