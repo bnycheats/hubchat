@@ -100,7 +100,7 @@ export default function CreateAccountForm() {
         shouldDirty: true,
       });
     }
-  }, [company]);
+  }, [company, form]);
 
   return (
     <div>

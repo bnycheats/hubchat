@@ -99,7 +99,7 @@ export default function UpdateAccountForm(props: UpdateAccountFormProps) {
         shouldDirty: true,
       });
     }
-  }, [company]);
+  }, [company, form]);
 
   if (!data) return notFound();
 
