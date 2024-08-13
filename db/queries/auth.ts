@@ -1,8 +1,17 @@
 import { type SupabaseClient } from '@supabase/supabase-js';
 
-export async function getUsers(supabase: SupabaseClient, page: number, perPage: number) {
+export async function getUsers(supabase: SupabaseClient, page?: number, perPage?: number) {
   try {
-    const { error, data } = await supabase.auth.admin.listUsers({ page, perPage });
+    let query;
+
+    if (page && perPage) {
+      query = supabase.auth.admin.listUsers({ page, perPage });
+    } else {
+      query = supabase.auth.admin.listUsers();
+    }
+
+    const { error, data } = await query;
+
     if (error) {
       throw error;
     }

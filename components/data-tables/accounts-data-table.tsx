@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
 import { useSearchParams } from 'next/navigation';
-// import ActionMenu from '../action-menus/company-action-menu';
+import ActionMenu from '../action-menus/account-action-menu';
 
 function AccountsDataTable() {
   const supabase = createClient();
@@ -46,6 +46,7 @@ function AccountsDataTable() {
           {
             header: 'Role',
             accessorKey: 'role',
+            cell: ({ cell }) => (cell.getValue() as string).toUpperCase(),
           },
           {
             header: 'Currency',
@@ -60,11 +61,11 @@ function AccountsDataTable() {
               </Badge>
             ),
           },
-          //   {
-          //     header: '',
-          //     accessorKey: 'action',
-          //     cell: ({ row }) => <ActionMenu row={row} />,
-          //   },
+          {
+            header: '',
+            accessorKey: 'action',
+            cell: ({ row }) => <ActionMenu row={row} />,
+          },
         ]}
       />
       <Pagination

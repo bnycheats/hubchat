@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { type RolesEnums } from './types';
 
-export type AccountTypes = {
+export type AccountResponse = {
   id: string;
   created_at: string;
   updated_at: string;

@@ -4,12 +4,12 @@ import { DialogProps } from '@radix-ui/react-dialog';
 import { type Row } from '@tanstack/react-table';
 import { Table, TableBody, TableRow, TableCell } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { type CompanyResponse } from '@/helpers/company-types';
+import { AccountResponse } from '@/helpers/account-types';
 import convertCentsToAmount from '@/utils/convertCentsToAmount';
 
-function CompanyInfoSheet(props: CompanyInfoSheetProps) {
+function AccountInfoSheet(props: AccountInfoSheetProps) {
   const {
-    row: { original: company },
+    row: { original: account },
     close,
     ...other
   } = props;
@@ -22,61 +22,67 @@ function CompanyInfoSheet(props: CompanyInfoSheetProps) {
     >
       <SheetContent className="w-screen !max-w-[500px]">
         <SheetHeader>
-          <SheetTitle>View company info</SheetTitle>
+          <SheetTitle>View account info</SheetTitle>
         </SheetHeader>
         <div className="mt-4">
           <Table>
             <TableBody>
               <TableRow>
                 <TableCell>Created:</TableCell>
-                <TableCell>{format(new Date(company.created_at), 'MMM dd yyy H:MM a')}</TableCell>
+                <TableCell>{format(new Date(account.created_at), 'MMM dd yyy H:MM a')}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Updated:</TableCell>
-                <TableCell>{format(new Date(company.updated_at), 'MMM dd yyy H:MM a')}</TableCell>
+                <TableCell>{format(new Date(account.updated_at), 'MMM dd yyy H:MM a')}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>Company UID:</TableCell>
-                <TableCell>{company.id}</TableCell>
+                <TableCell>Account UID:</TableCell>
+                <TableCell>{account.id}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>Company name:</TableCell>
-                <TableCell>{company.company_name}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>Owner name:</TableCell>
-                <TableCell>{company.owner_name}</TableCell>
+                <TableCell>Account name:</TableCell>
+                <TableCell>{account.account_name}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Currency:</TableCell>
-                <TableCell>{company.currency}</TableCell>
+                <TableCell>{account.currency}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Commission rate:</TableCell>
-                <TableCell>{company.commission_rate}%</TableCell>
+                <TableCell>{account.commission_rate}%</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Expenses rate:</TableCell>
-                <TableCell>{company.expenses_rate}%</TableCell>
+                <TableCell>{account.expenses_rate}%</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Per month rate:</TableCell>
-                <TableCell>{convertCentsToAmount(company.per_month_rate)}</TableCell>
+                <TableCell>{convertCentsToAmount(account.per_month_rate)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Per day rate:</TableCell>
-                <TableCell>{convertCentsToAmount(company.per_day_rate)}</TableCell>
+                <TableCell>{convertCentsToAmount(account.per_day_rate)}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Per hour rate:</TableCell>
-                <TableCell>{convertCentsToAmount(company.per_hour_rate)}</TableCell>
+                <TableCell>{convertCentsToAmount(account.per_hour_rate)}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Per hour rate:</TableCell>
+                <TableCell>{convertCentsToAmount(account.per_hour_rate)}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Roles:</TableCell>
+                <TableCell>
+                  <Badge variant="secondary">{account.role.toUpperCase()}</Badge>
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Status:</TableCell>
                 <TableCell>
                   {
-                    <Badge variant={company.status ? 'default' : 'destructive'}>
-                      {company.status ? 'Active' : 'Disabled'}
+                    <Badge variant={account.status ? 'default' : 'destructive'}>
+                      {account.status ? 'Active' : 'Disabled'}
                     </Badge>
                   }
                 </TableCell>
@@ -89,6 +95,6 @@ function CompanyInfoSheet(props: CompanyInfoSheetProps) {
   );
 }
 
-type CompanyInfoSheetProps = { row: Row<CompanyResponse>; close: () => void } & DialogProps;
+type AccountInfoSheetProps = { row: Row<AccountResponse>; close: () => void } & DialogProps;
 
-export default CompanyInfoSheet;
+export default AccountInfoSheet;

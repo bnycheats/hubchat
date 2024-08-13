@@ -5,57 +5,50 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { z } from 'zod';
-import { Check, ChevronsUpDown } from 'lucide-react';
 import roles from '@/constants/roles';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import currencies from '@/constants/currencies';
 import { Input } from '@/components/ui/input';
 import CompanyDetailsSection from '../sections/company-details-section';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { createAccount } from '@/db/actions/accounts';
-import { AccountFormSchema } from '@/helpers/account-types';
+import { updateAccount } from '@/db/actions/accounts';
+import { AccountFormSchema, type AccountResponse } from '@/helpers/account-types';
 import Spinner from '@/components/spinner';
 import { useQuery } from '@tanstack/react-query';
 import convertAmountToCents from '@/utils/convertAmountToCents';
+import convertCentsToAmount from '@/utils/convertCentsToAmount';
 import { createClient } from '@/utils/supabase/client';
 import { getCompanies } from '@/db/queries/companies';
-import { cn } from '@/lib/utils';
-import { getUsers } from '@/db/queries/auth';
+import { getAccount } from '@/db/queries/accounts';
+import { notFound } from 'next/navigation';
+import Message from '../message';
 
-export default function CreateAccountForm() {
+export default function UpdateAccountForm(props: UpdateAccountFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const supabase = createClient();
-
-  const [open, setOpen] = useState(false);
-
-  const { data, isLoading: usersLoading } = useQuery({
-    queryKey: ['Users'],
-    queryFn: () => getUsers(supabase),
-  });
 
   const { data: companies, isLoading: companiesLoading } = useQuery({
     queryKey: ['Companies'],
     queryFn: () => getCompanies(supabase),
   });
 
+  const { data, isLoading: accountLoading } = useQuery({
+    queryKey: ['Account', props.accountId],
+    queryFn: () => getAccount(supabase, props.accountId),
+  });
+
+  const account = data as AccountResponse;
+
   const defaultValues: z.infer<typeof AccountFormSchema> = {
-    user_id: '',
-    company_id: '',
-    currency: '',
-    account_name: '',
-    commission_rate: '',
-    expenses_rate: '',
-    over_time_rate: '',
-    per_hour_rate: '',
-    per_day_rate: '',
-    per_month_rate: '',
-    role: '',
+    ...account,
+    over_time_rate: convertCentsToAmount(Number(account.over_time_rate)),
+    per_day_rate: convertCentsToAmount(Number(account.per_day_rate)),
+    per_hour_rate: convertCentsToAmount(Number(account.per_hour_rate)),
+    per_month_rate: convertCentsToAmount(Number(account.per_month_rate)),
   };
 
   const form = useForm<z.infer<typeof AccountFormSchema>>({
@@ -65,15 +58,21 @@ export default function CreateAccountForm() {
 
   const company = companies?.data?.find((item) => item.id === form.watch('company_id'));
 
-  const createAccountMutation = useMutation({
-    mutationFn: (request: z.infer<typeof AccountFormSchema>) => createAccount(supabase, request),
+  const updateAccountMutation = useMutation({
+    mutationFn: (request: z.infer<typeof AccountFormSchema>) => updateAccount(supabase, props.accountId, request),
     onSuccess: () => {
       toast({
         variant: 'success',
-        title: 'Account created successfully',
+        title: 'Account updated successfully',
       });
       form.reset();
+      form.reset(form.watch(), {
+        keepValues: false,
+        keepDirty: false,
+        keepDefaultValues: false,
+      });
       queryClient.invalidateQueries({ queryKey: ['Accounts'] });
+      queryClient.invalidateQueries({ queryKey: ['Account'] });
     },
     onError: (error: any) =>
       toast({
@@ -84,7 +83,7 @@ export default function CreateAccountForm() {
 
   const onPressSubmit: SubmitHandler<z.infer<typeof AccountFormSchema>> = (payload) => {
     const { over_time_rate, per_day_rate, per_hour_rate, per_month_rate, ...other } = payload;
-    createAccountMutation.mutate({
+    updateAccountMutation.mutate({
       over_time_rate: convertAmountToCents(Number(payload.over_time_rate)),
       per_day_rate: convertAmountToCents(Number(payload.per_day_rate)),
       per_hour_rate: convertAmountToCents(Number(payload.per_hour_rate)),
@@ -102,65 +101,24 @@ export default function CreateAccountForm() {
     }
   }, [company]);
 
+  if (!data) return notFound();
+
+  if (!data.status) {
+    return (
+      <Message
+        title="Account Disabled"
+        message="Account has been disabled. Please contact support for more information."
+      />
+    );
+  }
+
   return (
     <div>
-      {(createAccountMutation.isPending || usersLoading || companiesLoading) && <Spinner centered fullScreen />}
+      {(updateAccountMutation.isPending || companiesLoading || accountLoading) && <Spinner centered fullScreen />}
       {company && <CompanyDetailsSection {...company} />}
       <section>
         <Form {...form}>
           <form className="mt-4 grid grid-cols-2 gap-6" onSubmit={form.handleSubmit(onPressSubmit)}>
-            <FormField
-              control={form.control}
-              name="user_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Select user email</FormLabel>
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={open}
-                          className="w-full justify-between font-normal"
-                        >
-                          {field.value
-                            ? data?.users?.find((user) => user.id === field.value)?.email
-                            : 'Select user email*'}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent align="start" className="w-full p-0">
-                      <Command>
-                        <CommandInput placeholder="Search user email..." />
-                        <CommandList>
-                          <CommandEmpty>No user found.</CommandEmpty>
-                          <CommandGroup>
-                            {data?.users.map((user) => (
-                              <CommandItem
-                                value={user.email}
-                                key={user.id}
-                                onSelect={() => {
-                                  form.setValue('user_id', user.id);
-                                  setOpen(false);
-                                }}
-                              >
-                                <Check
-                                  className={cn('mr-2 h-4 w-4', user.id === field.value ? 'opacity-100' : 'opacity-0')}
-                                />
-                                {user.email}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="company_id"
@@ -330,7 +288,7 @@ export default function CreateAccountForm() {
             />
             <div className="col-span-2 flex justify-end gap-3">
               <Button className="rounded-full w-28" type="submit" disabled={!form.formState.isDirty}>
-                Create
+                Update
               </Button>
             </div>
           </form>
@@ -339,3 +297,7 @@ export default function CreateAccountForm() {
     </div>
   );
 }
+
+type UpdateAccountFormProps = {
+  accountId: string;
+};

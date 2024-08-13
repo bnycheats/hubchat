@@ -1,15 +1,18 @@
 import { type CompanyResponse } from '@/helpers/company-types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-export async function getCompanies(supabase: SupabaseClient, page: number, pageSize: number) {
-  const start = (page - 1) * pageSize;
-  const end = start + pageSize - 1;
+export async function getCompanies(supabase: SupabaseClient, page?: number, pageSize?: number) {
   try {
-    const { error, data, count } = await supabase
-      .from('companies')
-      .select('*', { count: 'exact' })
-      .range(start, end)
-      .order('created_at', { ascending: false });
+    let query = supabase.from('companies').select('*', { count: 'exact' }).order('created_at', { ascending: false });
+
+    if (page && pageSize) {
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize - 1;
+      query = query.range(start, end);
+    }
+
+    const { error, data, count } = await query;
+
     if (error) {
       throw error;
     }

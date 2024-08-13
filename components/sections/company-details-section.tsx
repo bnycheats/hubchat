@@ -5,7 +5,7 @@ function CompanyDetailsSection(props: CompanyResponse) {
   return (
     <section className="border-b py-4">
       <small>Company Reference</small>
-      <div className="grid grid-cols-2 gap-4 mt-4">
+      <div className="grid grid-cols-2 gap-1 mt-3">
         <div className="flex gap-2">
           <div>Company name:</div>
           <div className="underline">{props?.company_name}</div>

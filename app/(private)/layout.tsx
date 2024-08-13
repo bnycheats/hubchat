@@ -46,6 +46,12 @@ function getMenus(): MenuModelType[] {
           icon: <AiOutlineTeam />,
         },
         {
+          itemKey: 'accounts',
+          to: '/accounts',
+          label: 'Accounts',
+          icon: <AiOutlineTeam />,
+        },
+        {
           itemKey: 'companies',
           to: '/companies',
           label: 'Companies',
