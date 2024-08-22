@@ -16,10 +16,11 @@ function AccountsDataTable() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get('page')) || DEFAULT_PAGE);
+  const filters: { userId?: string; status?: string } = JSON.parse(searchParams.get('filters') ?? '{}');
 
   const { data, isFetching } = useQuery({
-    queryKey: ['Accounts', page],
-    queryFn: () => getAccounts(supabase, page, DEFAULT_SIZE),
+    queryKey: ['Accounts', page, filters],
+    queryFn: () => getAccounts(supabase, page, DEFAULT_SIZE, filters),
     placeholderData: (previousData) => previousData,
   });
 
@@ -56,7 +57,7 @@ function AccountsDataTable() {
             header: 'Status',
             accessorKey: 'status',
             cell: ({ cell }) => (
-              <Badge variant={cell.getValue() ? 'default' : 'destructive'}>
+              <Badge size="xs" variant={cell.getValue() ? 'default' : 'destructive'}>
                 {cell.getValue() ? 'Active' : 'Disabled'}
               </Badge>
             ),

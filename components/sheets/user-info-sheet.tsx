@@ -57,7 +57,7 @@ function UserInfoSheet(props: UserInfoSheetProps) {
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {userMetaData.user_role?.map((item, index) => (
-                      <Badge key={index} variant="secondary">
+                      <Badge size="xs" key={index} variant="secondary">
                         {item.toUpperCase()}
                       </Badge>
                     ))}
@@ -84,7 +84,7 @@ function UserInfoSheet(props: UserInfoSheetProps) {
                 <TableCell>Status:</TableCell>
                 <TableCell>
                   {
-                    <Badge variant={userMetaData?.status ? 'default' : 'destructive'}>
+                    <Badge size="xs" variant={userMetaData?.status ? 'default' : 'destructive'}>
                       {userMetaData?.status ? 'Active' : 'Disabled'}
                     </Badge>
                   }

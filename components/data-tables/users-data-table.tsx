@@ -52,7 +52,7 @@ function UsersDataTable() {
             header: 'Status',
             accessorFn: (originalRow) => (originalRow.user_metadata as UserMetadata).status,
             cell: ({ cell }) => (
-              <Badge variant={cell.getValue() ? 'default' : 'destructive'}>
+              <Badge size="xs" variant={cell.getValue() ? 'default' : 'destructive'}>
                 {cell.getValue() ? 'Active' : 'Disabled'}
               </Badge>
             ),

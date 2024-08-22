@@ -7,6 +7,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { getCompanies } from '@/db/queries/companies';
 import { createClient } from '@/utils/supabase/server';
 import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
+import CompanyFilterPopup from '@/components/filter-popups/company-filter-popup';
 
 export default async function CompaniesPage(props: CompaniesPageProps) {
   try {
@@ -15,10 +16,11 @@ export default async function CompaniesPage(props: CompaniesPageProps) {
     const queryClient = new QueryClient();
 
     const page = Number(searchParams?.page ?? DEFAULT_PAGE);
+    const filters: { userId?: string; status?: string } = JSON.parse(searchParams?.filters ?? '{}');
 
     await queryClient.prefetchQuery({
       queryKey: ['Companies', page],
-      queryFn: () => getCompanies(supabase, page, DEFAULT_SIZE),
+      queryFn: () => getCompanies(supabase, page, DEFAULT_SIZE, filters),
     });
 
     return (
@@ -30,6 +32,7 @@ export default async function CompaniesPage(props: CompaniesPageProps) {
               <AiOutlinePlus /> Create Company
             </Button>
           </Link>
+          <CompanyFilterPopup />
         </div>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <CompaniesDataTable />
@@ -42,5 +45,5 @@ export default async function CompaniesPage(props: CompaniesPageProps) {
 }
 
 type CompaniesPageProps = {
-  searchParams: { page: string };
+  searchParams: { page: string; filters: string };
 };

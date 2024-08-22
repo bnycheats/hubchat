@@ -1,7 +1,8 @@
 import { type CompanyResponse } from '@/helpers/company-types';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { Filters } from '@/components/filter-popups/company-filter-popup/filter-popup';
 
-export async function getCompanies(supabase: SupabaseClient, page?: number, pageSize?: number) {
+export async function getCompanies(supabase: SupabaseClient, page?: number, pageSize?: number, filters?: Filters) {
   try {
     let query = supabase.from('companies').select('*', { count: 'exact' }).order('created_at', { ascending: false });
 
@@ -9,6 +10,22 @@ export async function getCompanies(supabase: SupabaseClient, page?: number, page
       const start = (page - 1) * pageSize;
       const end = start + pageSize - 1;
       query = query.range(start, end);
+    }
+
+    if (filters?.company_name) {
+      query = query.ilike('company_name', `%${filters.company_name}%`);
+    }
+
+    if (filters?.owner_name) {
+      query = query.ilike('owner_name', `%${filters.owner_name}%`);
+    }
+
+    if (filters?.status) {
+      query = query.eq('status', filters.status === 'ACTIVE');
+    }
+
+    if (filters?.currency) {
+      query = query.eq('currency', filters.currency);
     }
 
     const { error, data, count } = await query;

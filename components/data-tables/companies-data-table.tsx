@@ -16,10 +16,11 @@ function CompaniesDataTable() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get('page')) || DEFAULT_PAGE);
+  const filters: { userId?: string; status?: string } = JSON.parse(searchParams.get('filters') ?? '{}');
 
   const { data, isFetching } = useQuery({
-    queryKey: ['Companies', page],
-    queryFn: () => getCompanies(supabase, page, DEFAULT_SIZE),
+    queryKey: ['Companies', page, filters],
+    queryFn: () => getCompanies(supabase, page, DEFAULT_SIZE, filters),
     placeholderData: (previousData) => previousData,
   });
 
@@ -55,7 +56,7 @@ function CompaniesDataTable() {
             header: 'Status',
             accessorKey: 'status',
             cell: ({ cell }) => (
-              <Badge variant={cell.getValue() ? 'default' : 'destructive'}>
+              <Badge size="xs" variant={cell.getValue() ? 'default' : 'destructive'}>
                 {cell.getValue() ? 'Active' : 'Disabled'}
               </Badge>
             ),

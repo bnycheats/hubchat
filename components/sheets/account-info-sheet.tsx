@@ -72,16 +72,18 @@ function AccountInfoSheet(props: AccountInfoSheetProps) {
                 <TableCell>{convertCentsToAmount(account.per_hour_rate)}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>Roles:</TableCell>
+                <TableCell>Role:</TableCell>
                 <TableCell>
-                  <Badge variant="secondary">{account.role.toUpperCase()}</Badge>
+                  <Badge size="xs" variant="secondary">
+                    {account.role.toUpperCase()}
+                  </Badge>
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Status:</TableCell>
                 <TableCell>
                   {
-                    <Badge variant={account.status ? 'default' : 'destructive'}>
+                    <Badge size="xs" variant={account.status ? 'default' : 'destructive'}>
                       {account.status ? 'Active' : 'Disabled'}
                     </Badge>
                   }

@@ -41,7 +41,7 @@ export default function ProfilePage() {
               <span>{session.user.email}</span>
               <div className="flex gap-1 flex-wrap">
                 {userMetaData?.user_role?.map((item, index) => (
-                  <Badge key={index} variant="secondary">
+                  <Badge key={index} variant="secondary" size="xs">
                     {item.toUpperCase()}
                   </Badge>
                 ))}

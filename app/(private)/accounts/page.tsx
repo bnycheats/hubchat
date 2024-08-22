@@ -6,6 +6,7 @@ import { getAccounts } from '@/db/queries/accounts';
 import { createClient } from '@/utils/supabase/server';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import AccountsDataTable from '@/components/data-tables/accounts-data-table';
+import AccountFilterPopup from '@/components/filter-popups/account-filter-popup';
 import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
 
 export default async function AccountsPage(props: AccountsPageProps) {
@@ -15,10 +16,11 @@ export default async function AccountsPage(props: AccountsPageProps) {
     const supabase = createClient();
 
     const page = Number(searchParams?.page ?? DEFAULT_PAGE);
+    const filters: { userId?: string; status?: string } = JSON.parse(searchParams?.filters ?? '{}');
 
     await queryClient.prefetchQuery({
-      queryKey: ['Accounts', page],
-      queryFn: () => getAccounts(supabase, page, DEFAULT_SIZE),
+      queryKey: ['Accounts', page, filters],
+      queryFn: () => getAccounts(supabase, page, DEFAULT_SIZE, filters),
     });
 
     return (
@@ -30,6 +32,7 @@ export default async function AccountsPage(props: AccountsPageProps) {
               <AiOutlinePlus /> Create Account
             </Button>
           </Link>
+          <AccountFilterPopup />
         </div>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <AccountsDataTable />
@@ -42,5 +45,5 @@ export default async function AccountsPage(props: AccountsPageProps) {
 }
 
 type AccountsPageProps = {
-  searchParams: { page: string };
+  searchParams: { page: string; filters: string };
 };

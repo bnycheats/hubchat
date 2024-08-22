@@ -25,6 +25,7 @@ import { getCompanies } from '@/db/queries/companies';
 import { getAccount } from '@/db/queries/accounts';
 import { notFound } from 'next/navigation';
 import Message from '../message';
+import Clipboard from '../clip-board';
 
 export default function UpdateAccountForm(props: UpdateAccountFormProps) {
   const { toast } = useToast();
@@ -65,7 +66,6 @@ export default function UpdateAccountForm(props: UpdateAccountFormProps) {
         variant: 'success',
         title: 'Account updated successfully',
       });
-      form.reset();
       form.reset(form.watch(), {
         keepValues: false,
         keepDirty: false,
@@ -119,6 +119,10 @@ export default function UpdateAccountForm(props: UpdateAccountFormProps) {
       <section>
         <Form {...form}>
           <form className="mt-4 grid grid-cols-2 gap-6" onSubmit={form.handleSubmit(onPressSubmit)}>
+            <div className="col-span-2">
+              <label className="font-semibold">User id</label>
+              <Clipboard value={account.user_id}>{account.user_id}</Clipboard>
+            </div>
             <FormField
               control={form.control}
               name="company_id"

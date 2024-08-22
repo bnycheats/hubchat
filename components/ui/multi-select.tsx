@@ -45,7 +45,7 @@ function MultiSelect({
           <div className="flex flex-wrap gap-1">
             {!selected || (selected.length === 0 && <span className="text-body font-normal">{placeholder}</span>)}
             {selected.map((item) => (
-              <Badge key={item} className="flex gap-1.5">
+              <Badge size="xs" key={item} className="flex gap-1.5">
                 {displayLabel ? options?.find((option) => option.value === item)?.label : item}
                 <X className="h-4 w-4 hover:text-destructive" onClick={() => handleUnselect(item)} />
               </Badge>

@@ -30,7 +30,7 @@ export default async function HeaderDropdown() {
         <DropdownMenuLabel className="flex flex-col items-start gap-2">
           <div className="flex flex-wrap gap-1 max-w-52">
             {userMetaData?.user_role?.map((item, index) => (
-              <Badge key={index} variant="secondary">
+              <Badge size="xs" key={index} variant="secondary">
                 {item.toUpperCase()}
               </Badge>
             ))}
