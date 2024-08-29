@@ -7,6 +7,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { getUsers } from '@/db/queries/auth';
 import { createClient } from '@/utils/supabase/server';
 import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
+import UserFilterPopup from '@/components/filter-popups/user-filter-popup';
 
 export default async function UsersPage(props: UsersPageProps) {
   try {
@@ -15,10 +16,11 @@ export default async function UsersPage(props: UsersPageProps) {
     const supabase = createClient();
 
     const page = Number(searchParams?.page ?? DEFAULT_PAGE);
+    const filters: { status?: string } = JSON.parse(searchParams?.filters ?? '{}');
 
     await queryClient.prefetchQuery({
       queryKey: ['Users', page],
-      queryFn: () => getUsers(supabase, page, DEFAULT_SIZE),
+      queryFn: () => getUsers(supabase, page, DEFAULT_SIZE, filters),
     });
 
     return (
@@ -30,6 +32,7 @@ export default async function UsersPage(props: UsersPageProps) {
               <AiOutlinePlus /> Create User
             </Button>
           </Link>
+          <UserFilterPopup />
         </div>
         <HydrationBoundary state={dehydrate(queryClient)}>
           <UsersDataTable />
@@ -42,5 +45,5 @@ export default async function UsersPage(props: UsersPageProps) {
 }
 
 type UsersPageProps = {
-  searchParams: { page: string };
+  searchParams: { page: string; filters: string };
 };

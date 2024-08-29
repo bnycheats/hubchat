@@ -2,11 +2,9 @@ import { Chips, type FilterItem } from '@/components/chips';
 import { type Filters } from './filter-popup';
 
 enum TabsKey {
-  'NAME' = 'name',
-  'USER_ID' = 'userId',
+  'EMAIL' = 'email',
   'STATUS' = 'status',
   'ROLE' = 'role',
-  'CURRENCY' = 'currency',
 }
 
 function ManageFilter(props: ManageFilterProps) {
@@ -14,14 +12,12 @@ function ManageFilter(props: ManageFilterProps) {
 
   const displayLabel = (key: string, value: string) => {
     switch (key) {
-      case TabsKey.NAME:
-      case TabsKey.USER_ID:
-      case TabsKey.CURRENCY:
+      case TabsKey.EMAIL:
         return value;
-      case TabsKey.ROLE:
-        return value.charAt(0).toUpperCase() + value.slice(1);
       case TabsKey.STATUS:
         return value === 'ACTIVE' ? 'Active' : 'Disabled';
+      case TabsKey.ROLE:
+        return value.charAt(0).toUpperCase() + value.slice(1);
       default:
         return '';
     }
@@ -35,18 +31,14 @@ function ManageFilter(props: ManageFilterProps) {
 
   const getActiveTab = (key: string) => {
     switch (key) {
-      case TabsKey.NAME:
-        return TabsKey.NAME;
-      case TabsKey.USER_ID:
-        return TabsKey.USER_ID;
+      case TabsKey.EMAIL:
+        return TabsKey.EMAIL;
       case TabsKey.STATUS:
         return TabsKey.STATUS;
       case TabsKey.ROLE:
         return TabsKey.ROLE;
-      case TabsKey.CURRENCY:
-        return TabsKey.CURRENCY;
       default:
-        return TabsKey.USER_ID;
+        return TabsKey.EMAIL;
     }
   };
 

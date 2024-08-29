@@ -42,6 +42,7 @@ function FilterPopup() {
     (newFilters: Filters) => {
       const params = new URLSearchParams(searchParams);
       if (newFilters && Object.keys(removeNestedNullUndefinedEmptyString(newFilters)).length > 0) {
+        params.set('page', '1');
         params.set('filters', JSON.stringify(newFilters));
       } else {
         params.delete('filters');

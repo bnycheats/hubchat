@@ -18,10 +18,11 @@ function UsersDataTable() {
   const supabase = createClient();
 
   const [page, setPage] = useState(Number(searchParams.get('page')) || DEFAULT_PAGE);
+  const filters: { status?: string } = JSON.parse(searchParams.get('filters') ?? '{}');
 
   const { data, isFetching } = useQuery({
-    queryKey: ['Users', page],
-    queryFn: () => getUsers(supabase, page, DEFAULT_SIZE),
+    queryKey: ['Users', page, filters],
+    queryFn: () => getUsers(supabase, page, DEFAULT_SIZE, filters),
     placeholderData: (previousData) => previousData,
   });
 
