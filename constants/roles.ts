@@ -1,18 +1,20 @@
+import { RolesEnums } from '@/helpers/types';
+
 export default [
   {
-    value: 'admin',
+    value: RolesEnums.ADMIN,
     label: 'Admin',
   },
   {
-    value: 'hr',
+    value: RolesEnums.HR,
     label: 'Human Resource',
   },
   {
-    value: 'manager',
+    value: RolesEnums.MANAGER,
     label: 'Manager',
   },
   {
-    value: 'chatter',
+    value: RolesEnums.CHATTER,
     label: 'Chatter',
   },
 ];

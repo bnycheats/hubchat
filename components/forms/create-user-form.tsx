@@ -84,7 +84,7 @@ export default function CreateUserForm() {
         },
       );
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast({
         variant: 'success',
         title: 'User created successfully',

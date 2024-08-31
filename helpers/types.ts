@@ -4,3 +4,9 @@ export enum RolesEnums {
   CHATTER = 'chatter',
   HR = 'hr',
 }
+
+export enum StateEnums {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+}
