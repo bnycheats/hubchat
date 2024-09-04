@@ -83,7 +83,7 @@ function AccountInfoSheet(props: AccountInfoSheetProps) {
                 <TableCell>Status:</TableCell>
                 <TableCell>
                   {
-                    <Badge size="xs" variant={account.status ? 'default' : 'destructive'}>
+                    <Badge size="xs" variant={account.status ? 'success' : 'destructive'}>
                       {account.status ? 'Active' : 'Disabled'}
                     </Badge>
                   }

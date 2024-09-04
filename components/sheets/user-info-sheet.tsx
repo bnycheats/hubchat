@@ -84,7 +84,7 @@ function UserInfoSheet(props: UserInfoSheetProps) {
                 <TableCell>Status:</TableCell>
                 <TableCell>
                   {
-                    <Badge size="xs" variant={userMetaData?.status ? 'default' : 'destructive'}>
+                    <Badge size="xs" variant={userMetaData?.status ? 'success' : 'destructive'}>
                       {userMetaData?.status ? 'Active' : 'Disabled'}
                     </Badge>
                   }

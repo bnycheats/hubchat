@@ -57,7 +57,7 @@ function AccountsDataTable() {
             header: 'Status',
             accessorKey: 'status',
             cell: ({ cell }) => (
-              <Badge size="xs" variant={cell.getValue() ? 'default' : 'destructive'}>
+              <Badge size="xs" variant={cell.getValue() ? 'success' : 'destructive'}>
                 {cell.getValue() ? 'Active' : 'Disabled'}
               </Badge>
             ),

@@ -75,7 +75,7 @@ function CompanyInfoSheet(props: CompanyInfoSheetProps) {
                 <TableCell>Status:</TableCell>
                 <TableCell>
                   {
-                    <Badge size="xs" variant={company.status ? 'default' : 'destructive'}>
+                    <Badge size="xs" variant={company.status ? 'success' : 'destructive'}>
                       {company.status ? 'Active' : 'Disabled'}
                     </Badge>
                   }

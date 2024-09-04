@@ -15,7 +15,7 @@ import typeOfLeaves from '@/constants/type-of-leaves';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { format } from 'date-fns';
+import { format, isBefore, setHours, setMinutes, subDays } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { ApplyLeaveFormSchema } from '@/helpers/application-types';
 import Spinner from '@/components/spinner';
@@ -55,7 +55,6 @@ export default function ApplyLeaveForm() {
   });
 
   const fileRef = form.register('file');
-  const isOtherMount = form.watch('type_of_leave') === 'other';
 
   const applyLeaveMutation = useMutation({
     mutationFn: (request: z.infer<typeof ApplyLeaveFormSchema>) => applyLeave(supabase, request),
@@ -142,7 +141,7 @@ export default function ApplyLeaveForm() {
               name="type_of_leave"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Type of Leave</FormLabel>
+                  <FormLabel>Type of leave</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
@@ -161,67 +160,7 @@ export default function ApplyLeaveForm() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="start_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Start Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
-                      >
-                        {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="end_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>End Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
-                      >
-                        {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {isOtherMount && (
+            {form.watch('type_of_leave') === 'other' && (
               <FormField
                 control={form.control}
                 name="other"
@@ -236,6 +175,77 @@ export default function ApplyLeaveForm() {
             )}
             <FormField
               control={form.control}
+              name="start_date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Start date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
+                      >
+                        {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={(date) => {
+                          if (date) {
+                            field.onChange(setMinutes(setHours(date, 12), 0));
+                            if (isBefore(form.watch('end_date'), date)) {
+                              form.setValue('end_date', setMinutes(setHours(date, 23), 59));
+                            }
+                          }
+                        }}
+                        disabled={(date) => date < subDays(new Date(), 1) || date < new Date('1900-01-01')}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="end_date"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>End date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
+                      >
+                        {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={(date) => date && field.onChange(setMinutes(setHours(date, 23), 59))}
+                        disabled={(date) =>
+                          date < subDays(new Date(), 1) ||
+                          date < form.watch('start_date') ||
+                          date < new Date('1900-01-01')
+                        }
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="reason"
               render={({ field }) => (
                 <FormItem className="col-span-2">
@@ -248,7 +258,7 @@ export default function ApplyLeaveForm() {
             <FormField
               control={form.control}
               name="file"
-              render={({ field }) => (
+              render={() => (
                 <FormItem className="col-span-2">
                   <FormLabel>Please attach here any supporting documents (like medical certificate, etc.)</FormLabel>
                   <FormControl>
