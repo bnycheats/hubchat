@@ -37,3 +37,16 @@ export async function applyLeave(supabase: SupabaseClient, payload: z.infer<type
     throw e;
   }
 }
+
+export async function updateLeaveStatus(supabase: SupabaseClient, applicationId: string, state: StateEnums) {
+  try {
+    const { error, data } = await supabase.from('applications').update({ state }).eq('id', applicationId);
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}

@@ -29,11 +29,11 @@ function CompanyInfoSheet(props: CompanyInfoSheetProps) {
             <TableBody>
               <TableRow>
                 <TableCell>Created:</TableCell>
-                <TableCell>{format(new Date(company.created_at), 'MMM dd yyy H:MM a')}</TableCell>
+                <TableCell>{format(new Date(company.created_at), 'MMM dd yyy h:mm a')}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Updated:</TableCell>
-                <TableCell>{format(new Date(company.updated_at), 'MMM dd yyy H:MM a')}</TableCell>
+                <TableCell>{format(new Date(company.updated_at), 'MMM dd yyy h:mm a')}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Company UID:</TableCell>

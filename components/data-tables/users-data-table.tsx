@@ -35,7 +35,7 @@ function UsersDataTable() {
           {
             header: 'Created',
             accessorKey: 'created_at',
-            cell: ({ row }) => format(new Date(row.getValue('created_at')), 'MMM dd yyy H:MM a'),
+            cell: ({ row }) => format(new Date(row.getValue('created_at')), 'MMM dd yyy h:mm a'),
           },
           {
             header: 'First name',

@@ -15,7 +15,7 @@ import typeOfLeaves from '@/constants/type-of-leaves';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { format, isBefore, setHours, setMinutes, subDays } from 'date-fns';
+import { format, isBefore, startOfDay, endOfDay, subDays } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { ApplyLeaveFormSchema } from '@/helpers/application-types';
 import Spinner from '@/components/spinner';
@@ -41,8 +41,8 @@ export default function ApplyLeaveForm() {
   const defaultValues: z.infer<typeof ApplyLeaveFormSchema> = {
     user_id: '',
     email: '',
-    start_date: new Date(),
-    end_date: new Date(),
+    start_date: startOfDay(new Date()),
+    end_date: endOfDay(new Date()),
     file: undefined,
     other: '',
     reason: '',
@@ -195,9 +195,9 @@ export default function ApplyLeaveForm() {
                         selected={field.value}
                         onSelect={(date) => {
                           if (date) {
-                            field.onChange(setMinutes(setHours(date, 12), 0));
+                            field.onChange(startOfDay(date));
                             if (isBefore(form.watch('end_date'), date)) {
-                              form.setValue('end_date', setMinutes(setHours(date, 23), 59));
+                              form.setValue('end_date', endOfDay(date));
                             }
                           }
                         }}
@@ -230,7 +230,7 @@ export default function ApplyLeaveForm() {
                       <Calendar
                         mode="single"
                         selected={field.value}
-                        onSelect={(date) => date && field.onChange(setMinutes(setHours(date, 23), 59))}
+                        onSelect={(date) => date && field.onChange(endOfDay(date))}
                         disabled={(date) =>
                           date < subDays(new Date(), 1) ||
                           date < form.watch('start_date') ||

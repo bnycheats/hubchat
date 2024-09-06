@@ -12,6 +12,7 @@ import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
 import { useSearchParams } from 'next/navigation';
 import typeOfLeaves from '@/constants/type-of-leaves';
 import { StateEnums } from '@/helpers/types';
+import ActionMenu from '../action-menus/application-action-menu';
 
 function ApplicationsDataTable() {
   const supabase = createClient();
@@ -45,7 +46,7 @@ function ApplicationsDataTable() {
           {
             header: 'Created',
             accessorKey: 'created_at',
-            cell: ({ row }) => format(new Date(row.getValue('created_at')), 'MMM dd yyy H:MM a'),
+            cell: ({ row }) => format(new Date(row.getValue('created_at')), 'MMM dd yyy h:mm a'),
           },
           {
             header: 'Email',
@@ -54,12 +55,12 @@ function ApplicationsDataTable() {
           {
             header: 'Start date',
             accessorKey: 'start_date',
-            cell: ({ row }) => format(new Date(row.getValue('start_date')), 'MMM dd yyy H:MM a'),
+            cell: ({ row }) => format(new Date(row.getValue('start_date')), 'MMM dd yyy h:mm a'),
           },
           {
             header: 'End date',
             accessorKey: 'end_date',
-            cell: ({ row }) => format(new Date(row.getValue('end_date')), 'MMM dd yyy H:MM a'),
+            cell: ({ row }) => format(new Date(row.getValue('end_date')), 'MMM dd yyy h:mm a'),
           },
           {
             header: 'Type of leave',
@@ -74,6 +75,11 @@ function ApplicationsDataTable() {
                 {row.getValue('state')}
               </Badge>
             ),
+          },
+          {
+            header: '',
+            accessorKey: 'action',
+            cell: ({ row }) => <ActionMenu row={row} />,
           },
         ]}
       />

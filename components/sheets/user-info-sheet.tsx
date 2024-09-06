@@ -30,7 +30,7 @@ function UserInfoSheet(props: UserInfoSheetProps) {
             <TableBody>
               <TableRow>
                 <TableCell>Created:</TableCell>
-                <TableCell>{format(new Date(user.created_at), 'MMM dd yyy H:MM a')}</TableCell>
+                <TableCell>{format(new Date(user.created_at), 'MMM dd yyy h:mm a')}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>User UID:</TableCell>
