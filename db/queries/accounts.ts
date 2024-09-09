@@ -17,8 +17,12 @@ export async function getAccounts(supabase: SupabaseClient, page: number, pageSi
       query = query.ilike('account_name', `%${filters.name}%`);
     }
 
+    if (filters?.accountId) {
+      query = query.eq('id', filters.accountId);
+    }
+
     if (filters?.userId) {
-      query = query.eq('id', filters.userId);
+      query = query.eq('user_id', filters.userId);
     }
 
     if (filters?.status) {

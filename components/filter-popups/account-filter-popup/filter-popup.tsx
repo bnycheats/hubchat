@@ -77,6 +77,9 @@ function FilterPopup() {
               <TabsTrigger className={tab_className} value="name">
                 Name
               </TabsTrigger>
+              <TabsTrigger className={tab_className} value="accountId">
+                Account Id
+              </TabsTrigger>
               <TabsTrigger className={tab_className} value="userId">
                 User Id
               </TabsTrigger>
@@ -96,6 +99,13 @@ function FilterPopup() {
                   defaultValue={filters?.name ?? ''}
                   placeholder="Enter a name"
                   onBlur={(event) => onFilterChange({ ...filters, name: event.target.value })}
+                />
+              </TabsContent>
+              <TabsContent value="accountId">
+                <Input
+                  defaultValue={filters?.accountId ?? ''}
+                  placeholder="Enter a valid account id"
+                  onBlur={(event) => onFilterChange({ ...filters, accountId: event.target.value })}
                 />
               </TabsContent>
               <TabsContent value="userId">
@@ -162,6 +172,7 @@ function FilterPopup() {
 
 export type Filters = {
   name?: string;
+  accountId?: string;
   userId?: string;
   status?: string;
   role?: RolesEnums;

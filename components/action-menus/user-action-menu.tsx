@@ -15,13 +15,23 @@ import UserInfo from '../sheets/user-info-sheet';
 import DisableUserAlert from '../alerts/disable-user-alert';
 import EnableUserAlert from '../alerts/enable-user-alert';
 import { type UserMetadata } from '@/helpers/auth-types';
+import { useRouter } from 'next/navigation';
 
 function UserActionMenu(props: UserActionMenuProps) {
   const { row } = props;
+  const { push } = useRouter();
+
   const userMetaData = row.original.user_metadata as UserMetadata;
   const [enableUserOpen, setEnableUserOpen] = useState(false);
   const [disableUserOpen, setDisableUserOpen] = useState(false);
   const [viewUserInfoOpen, setViewUserInfoOpen] = useState(false);
+
+  const navigateToAccounts = (userId: string) => {
+    const params = new URLSearchParams();
+    params.set('filters', JSON.stringify({ userId }));
+    return push(`/accounts?${params.toString()}`);
+  };
+
   return (
     <Fragment>
       <EnableUserAlert userId={row.original.id} open={enableUserOpen} closeAlert={() => setEnableUserOpen(false)} />
@@ -33,9 +43,7 @@ function UserActionMenu(props: UserActionMenuProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setViewUserInfoOpen(true)}>View user info</DropdownMenuItem>
-          <Link href={`/users/${row.original.id}/accounts`}>
-            <DropdownMenuItem>View user accounts</DropdownMenuItem>
-          </Link>
+          <DropdownMenuItem onClick={() => navigateToAccounts(row.original.id)}>View user accounts</DropdownMenuItem>
           <Link href={`/users/${row.original.id}`}>
             <DropdownMenuItem>Update user</DropdownMenuItem>
           </Link>
