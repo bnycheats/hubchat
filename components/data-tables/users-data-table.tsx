@@ -50,6 +50,18 @@ function UsersDataTable() {
             accessorKey: 'email',
           },
           {
+            header: 'Roles',
+            cell: ({ row }) => (
+              <div className="flex flex-wrap gap-1">
+                {(row.original.user_metadata as UserMetadata).user_role?.map((item, index) => (
+                  <Badge size="xs" key={index} variant="secondary">
+                    {item.toUpperCase()}
+                  </Badge>
+                ))}
+              </div>
+            ),
+          },
+          {
             header: 'Status',
             accessorFn: (originalRow) => (originalRow.user_metadata as UserMetadata).status,
             cell: ({ cell }) => (

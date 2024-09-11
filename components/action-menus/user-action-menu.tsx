@@ -32,6 +32,12 @@ function UserActionMenu(props: UserActionMenuProps) {
     return push(`/accounts?${params.toString()}`);
   };
 
+  const navigateToCreateAccount = (userId: string) => {
+    const params = new URLSearchParams();
+    params.set('userId', userId);
+    return push(`/create-account?${params.toString()}`);
+  };
+
   return (
     <Fragment>
       <EnableUserAlert userId={row.original.id} open={enableUserOpen} closeAlert={() => setEnableUserOpen(false)} />
@@ -44,6 +50,9 @@ function UserActionMenu(props: UserActionMenuProps) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setViewUserInfoOpen(true)}>View user info</DropdownMenuItem>
           <DropdownMenuItem onClick={() => navigateToAccounts(row.original.id)}>View user accounts</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigateToCreateAccount(row.original.id)}>
+            Create user account
+          </DropdownMenuItem>
           <Link href={`/users/${row.original.id}`}>
             <DropdownMenuItem>Update user</DropdownMenuItem>
           </Link>

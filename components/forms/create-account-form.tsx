@@ -26,11 +26,13 @@ import { createClient } from '@/utils/supabase/client';
 import { getCompanies } from '@/db/queries/companies';
 import { cn } from '@/lib/utils';
 import { getUsers } from '@/db/queries/auth';
+import { useSearchParams } from 'next/navigation';
 
 export default function CreateAccountForm() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const supabase = createClient();
+  const searchParams = useSearchParams();
 
   const [open, setOpen] = useState(false);
 
@@ -45,7 +47,7 @@ export default function CreateAccountForm() {
   });
 
   const defaultValues: z.infer<typeof AccountFormSchema> = {
-    user_id: '',
+    user_id: searchParams.get('userId') ?? '',
     company_id: '',
     currency: '',
     account_name: '',

@@ -38,7 +38,7 @@ function ApplicationActionMenu(props: ApplicationActionMenuProps) {
           <AiOutlineEllipsis size={20} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setViewCompanyInfoOpen(true)}>View company info</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setViewCompanyInfoOpen(true)}>View application info</DropdownMenuItem>
           {row.original.state === StateEnums.PENDING && (
             <Fragment>
               <DropdownMenuItem onClick={() => setApproveLeaveOpen(true)}>Approve</DropdownMenuItem>
