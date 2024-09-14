@@ -50,7 +50,7 @@ function FilterPopup() {
       }
       return window.history.pushState(null, '', `?${params.toString()}`);
     },
-    [filters],
+    [searchParams],
   );
 
   return (

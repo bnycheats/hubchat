@@ -12,33 +12,33 @@ import { type Row } from '@tanstack/react-table';
 import { type ApplicationResponse } from '@/helpers/application-types';
 import ApplicationInfoSheet from '../sheets/application-info-sheet';
 import ApproveLeaveAlert from '../alerts/approve-leave-alert';
-import RejectLeaveAlert from '../alerts/reject-leave-alert';
+import RejectLeaveModal from '../modals/reject-leave-modal';
 import { StateEnums } from '@/helpers/types';
 
 function ApplicationActionMenu(props: ApplicationActionMenuProps) {
   const { row } = props;
-  const [viewCompanyInfoOpen, setViewCompanyInfoOpen] = useState(false);
+  const [viewLeaveInfoOpen, setViewLeaveInfoOpen] = useState(false);
   const [approveLeaveOpen, setApproveLeaveOpen] = useState(false);
   const [rejectLeaveOpen, setRejectLeaveOpen] = useState(false);
   return (
     <Fragment>
-      <ApplicationInfoSheet row={row} open={viewCompanyInfoOpen} close={() => setViewCompanyInfoOpen(false)} />
+      <ApplicationInfoSheet row={row} open={viewLeaveInfoOpen} close={() => setViewLeaveInfoOpen(false)} />
       <ApproveLeaveAlert
         applicationId={row.original.id}
         open={approveLeaveOpen}
         closeAlert={() => setApproveLeaveOpen(false)}
       />
-      <RejectLeaveAlert
+      <RejectLeaveModal
         applicationId={row.original.id}
         open={rejectLeaveOpen}
-        closeAlert={() => setRejectLeaveOpen(false)}
+        closeModal={() => setRejectLeaveOpen(false)}
       />
       <DropdownMenu>
         <DropdownMenuTrigger>
           <AiOutlineEllipsis size={20} />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setViewCompanyInfoOpen(true)}>View application info</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setViewLeaveInfoOpen(true)}>View application info</DropdownMenuItem>
           {row.original.state === StateEnums.PENDING && (
             <Fragment>
               <DropdownMenuItem onClick={() => setApproveLeaveOpen(true)}>Approve</DropdownMenuItem>

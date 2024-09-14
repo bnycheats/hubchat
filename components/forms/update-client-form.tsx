@@ -12,41 +12,53 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/components/ui/use-toast';
 import Spinner from '@/components/spinner';
 import convertAmountToCents from '@/utils/convertAmountToCents';
-import { createCompany } from '@/db/actions/companies';
+import convertCentsToAmount from '@/utils/convertCentsToAmount';
+import { updateClient } from '@/db/actions/clients';
+import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase/client';
-import { CompanyFormSchema } from '@/helpers/company-types';
+import Message from '@/components/message';
+import { ClientFormSchema, type ClientResponse } from '@/helpers/client-types';
+import { getClient } from '@/db/queries/clients';
+import { notFound } from 'next/navigation';
 
-export default function CreateCompanyForm() {
+export default function UpdateClientForm(props: UpdateClientFormProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const supabase = createClient();
 
-  const defaultValues: z.infer<typeof CompanyFormSchema> = {
-    owner_name: '',
-    company_name: '',
-    currency: '',
-    commission_rate: '',
-    expenses_rate: '',
-    over_time_rate: '',
-    per_hour_rate: '',
-    per_day_rate: '',
-    per_month_rate: '',
+  const { data, isLoading } = useQuery({
+    queryKey: ['Client', props.clientId],
+    queryFn: () => getClient(supabase, props.clientId),
+  });
+
+  const client = data as ClientResponse;
+
+  const defaultValues: z.infer<typeof ClientFormSchema> = {
+    ...client,
+    per_day_rate: convertCentsToAmount(Number(client.per_day_rate)),
+    per_hour_rate: convertCentsToAmount(Number(client.per_hour_rate)),
+    per_month_rate: convertCentsToAmount(Number(client.per_month_rate)),
   };
 
-  const form = useForm<z.infer<typeof CompanyFormSchema>>({
-    resolver: zodResolver(CompanyFormSchema),
+  const form = useForm<z.infer<typeof ClientFormSchema>>({
+    resolver: zodResolver(ClientFormSchema),
     defaultValues,
   });
 
-  const createCompanyMutation = useMutation({
-    mutationFn: (payload: z.infer<typeof CompanyFormSchema>) => createCompany(supabase, payload),
+  const updateClientMutation = useMutation({
+    mutationFn: (payload: z.infer<typeof ClientFormSchema>) => updateClient(supabase, props.clientId, payload),
     onSuccess: () => {
       toast({
         variant: 'success',
-        title: 'Company created successfully',
+        title: 'Client updated successfully',
       });
-      form.reset();
-      queryClient.invalidateQueries({ queryKey: ['Companies'] });
+      form.reset(form.watch(), {
+        keepValues: false,
+        keepDirty: false,
+        keepDefaultValues: false,
+      });
+      queryClient.invalidateQueries({ queryKey: ['Clients'] });
+      queryClient.invalidateQueries({ queryKey: ['Client'] });
     },
     onError: (error: any) =>
       toast({
@@ -55,8 +67,8 @@ export default function CreateCompanyForm() {
       }),
   });
 
-  const onPressSubmit: SubmitHandler<z.infer<typeof CompanyFormSchema>> = (payload) =>
-    createCompanyMutation.mutate({
+  const onPressSubmit: SubmitHandler<z.infer<typeof ClientFormSchema>> = (payload) =>
+    updateClientMutation.mutate({
       ...payload,
       over_time_rate: convertAmountToCents(Number(payload.over_time_rate)),
       per_day_rate: convertAmountToCents(Number(payload.per_day_rate)),
@@ -64,9 +76,20 @@ export default function CreateCompanyForm() {
       per_month_rate: convertAmountToCents(Number(payload.per_month_rate)),
     });
 
+  if (!data) return notFound();
+
+  if (!data.status) {
+    return (
+      <Message
+        title="Client Disabled"
+        message="Client has been disabled. Please contact support for more information."
+      />
+    );
+  }
+
   return (
     <Form {...form}>
-      {createCompanyMutation.isPending && <Spinner centered fullScreen />}
+      {(updateClientMutation.isPending || isLoading) && <Spinner centered fullScreen />}
       <form className="mt-4 grid grid-cols-2 gap-6" onSubmit={form.handleSubmit(onPressSubmit)}>
         <FormField
           control={form.control}
@@ -200,10 +223,14 @@ export default function CreateCompanyForm() {
         />
         <div className="col-span-2 flex justify-end gap-3">
           <Button className="rounded-full w-28" type="submit" disabled={!form.formState.isDirty}>
-            Create
+            Update
           </Button>
         </div>
       </form>
     </Form>
   );
 }
+
+type UpdateClientFormProps = {
+  clientId: string;
+};

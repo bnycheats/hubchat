@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export type CompanyResponse = {
+export type ClientResponse = {
   id: string;
   created_at: string;
   updated_at: string;
@@ -16,7 +16,7 @@ export type CompanyResponse = {
   status: boolean;
 };
 
-export const CompanyFormSchema = z.object({
+export const ClientFormSchema = z.object({
   owner_name: z.string().min(1, { message: 'This field is required' }),
   company_name: z.string().min(1, { message: 'This field is required' }),
   currency: z.string().min(3, { message: 'This field is required' }),

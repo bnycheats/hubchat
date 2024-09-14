@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import currencies from '@/constants/currencies';
 import { Input } from '@/components/ui/input';
-import CompanyDetailsSection from '../sections/company-details-section';
+import ClientDetailsSection from '../sections/client-details-section';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
 import { updateAccount } from '@/db/actions/accounts';
@@ -21,7 +21,7 @@ import { useQuery } from '@tanstack/react-query';
 import convertAmountToCents from '@/utils/convertAmountToCents';
 import convertCentsToAmount from '@/utils/convertCentsToAmount';
 import { createClient } from '@/utils/supabase/client';
-import { getCompanies } from '@/db/queries/companies';
+import { getClients } from '@/db/queries/clients';
 import { getAccount } from '@/db/queries/accounts';
 import { notFound } from 'next/navigation';
 import Message from '../message';
@@ -32,9 +32,9 @@ export default function UpdateAccountForm(props: UpdateAccountFormProps) {
   const queryClient = useQueryClient();
   const supabase = createClient();
 
-  const { data: companies, isLoading: companiesLoading } = useQuery({
-    queryKey: ['Companies'],
-    queryFn: () => getCompanies(supabase),
+  const { data: clients, isLoading: clientsLoading } = useQuery({
+    queryKey: ['Clients'],
+    queryFn: () => getClients(supabase),
   });
 
   const { data, isLoading: accountLoading } = useQuery({
@@ -57,7 +57,7 @@ export default function UpdateAccountForm(props: UpdateAccountFormProps) {
     defaultValues,
   });
 
-  const company = companies?.data?.find((item) => item.id === form.watch('company_id'));
+  const client = clients?.data?.find((item) => item.id === form.watch('client_id'));
 
   const updateAccountMutation = useMutation({
     mutationFn: (request: z.infer<typeof AccountFormSchema>) => updateAccount(supabase, props.accountId, request),
@@ -93,13 +93,13 @@ export default function UpdateAccountForm(props: UpdateAccountFormProps) {
   };
 
   useEffect(() => {
-    if (company) {
-      form.setValue('currency', company.currency, {
+    if (client) {
+      form.setValue('currency', client.currency, {
         shouldValidate: true,
         shouldDirty: true,
       });
     }
-  }, [company, form]);
+  }, [client, form]);
 
   if (!data) return notFound();
 
@@ -114,8 +114,8 @@ export default function UpdateAccountForm(props: UpdateAccountFormProps) {
 
   return (
     <div>
-      {(updateAccountMutation.isPending || companiesLoading || accountLoading) && <Spinner centered fullScreen />}
-      {company && <CompanyDetailsSection {...company} />}
+      {(updateAccountMutation.isPending || clientsLoading || accountLoading) && <Spinner centered fullScreen />}
+      {client && <ClientDetailsSection {...client} />}
       <section>
         <Form {...form}>
           <form className="mt-4 grid grid-cols-2 gap-6" onSubmit={form.handleSubmit(onPressSubmit)}>
@@ -125,20 +125,20 @@ export default function UpdateAccountForm(props: UpdateAccountFormProps) {
             </div>
             <FormField
               control={form.control}
-              name="company_id"
+              name="client_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Company</FormLabel>
+                  <FormLabel>Client</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select company*" />
+                        <SelectValue placeholder="Select client*" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {companies?.data?.map((item, index) => (
+                      {clients?.data?.map((item, index) => (
                         <SelectItem key={index} value={item.id}>
-                          {item.company_name}
+                          {item.owner_name}
                         </SelectItem>
                       ))}
                     </SelectContent>

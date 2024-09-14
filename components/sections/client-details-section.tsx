@@ -1,10 +1,10 @@
-import { type CompanyResponse } from '@/helpers/company-types';
+import { type ClientResponse } from '@/helpers/client-types';
 import convertCentsToAmount from '@/utils/convertCentsToAmount';
 
-function CompanyDetailsSection(props: CompanyResponse) {
+function ClientDetailsSection(props: ClientResponse) {
   return (
     <section className="border-b py-4">
-      <small>Company Reference</small>
+      <small>Client Reference</small>
       <div className="grid grid-cols-2 gap-1 mt-3">
         <div className="flex gap-2">
           <div>Company name:</div>
@@ -71,4 +71,4 @@ function CompanyDetailsSection(props: CompanyResponse) {
   );
 }
 
-export default CompanyDetailsSection;
+export default ClientDetailsSection;

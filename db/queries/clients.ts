@@ -1,10 +1,10 @@
-import { type CompanyResponse } from '@/helpers/company-types';
+import { type ClientResponse } from '@/helpers/client-types';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { Filters } from '@/components/filter-popups/company-filter-popup/filter-popup';
+import { Filters } from '@/components/filter-popups/client-filter-popup/filter-popup';
 
-export async function getCompanies(supabase: SupabaseClient, page?: number, pageSize?: number, filters?: Filters) {
+export async function getClients(supabase: SupabaseClient, page?: number, pageSize?: number, filters?: Filters) {
   try {
-    let query = supabase.from('companies').select('*', { count: 'exact' }).order('created_at', { ascending: false });
+    let query = supabase.from('clients').select('*', { count: 'exact' }).order('created_at', { ascending: false });
 
     if (page && pageSize) {
       const start = (page - 1) * pageSize;
@@ -36,20 +36,20 @@ export async function getCompanies(supabase: SupabaseClient, page?: number, page
     if (!data) {
       return { data, count: 0 };
     }
-    return { data: data as Array<CompanyResponse>, count };
+    return { data: data as Array<ClientResponse>, count };
   } catch (e) {
     console.error(e);
     throw e;
   }
 }
 
-export async function getCompany(supabase: SupabaseClient, companyId: string) {
+export async function getClient(supabase: SupabaseClient, clientId: string) {
   try {
-    const { error, data } = await supabase.from('companies').select().eq('id', companyId).single();
+    const { error, data } = await supabase.from('clients').select().eq('id', clientId).single();
     if (error) {
       throw error;
     }
-    return data as unknown as CompanyResponse;
+    return data as unknown as ClientResponse;
   } catch (e) {
     console.error(e);
     throw e;

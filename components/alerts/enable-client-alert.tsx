@@ -12,31 +12,31 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/components/ui/use-toast';
 import { type AlertDialogProps } from '@radix-ui/react-alert-dialog';
 import Spinner from '@/components/spinner';
-import { updateCompanyStatus } from '@/db/actions/companies';
+import { updateClientStatus } from '@/db/actions/clients';
 
-function EnableCompanyAlert(props: EnableCompanyAlertProps) {
-  const { companyId, closeAlert, ...other } = props;
+function EnableClientAlert(props: EnableClientAlertProps) {
+  const { clientId, closeAlert, ...other } = props;
   const supabase = createClient();
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const enableCompanyMutation = useMutation({
-    mutationFn: (request: { companyId: string; status: boolean }) =>
-      updateCompanyStatus(supabase, request.companyId, request.status),
+  const enableClientMutation = useMutation({
+    mutationFn: (request: { clientId: string; status: boolean }) =>
+      updateClientStatus(supabase, request.clientId, request.status),
     onSuccess: () => {
       toast({
         variant: 'success',
-        title: 'Company enabled successfully',
+        title: 'Client enabled successfully',
       });
       closeAlert();
-      queryClient.invalidateQueries({ queryKey: ['Companies'] });
-      queryClient.invalidateQueries({ queryKey: ['Company'] });
+      queryClient.invalidateQueries({ queryKey: ['Clients'] });
+      queryClient.invalidateQueries({ queryKey: ['Client'] });
     },
     onError: (error: any) =>
       toast({
         variant: 'destructive',
-        title: `Error enabling company: ${error}`,
+        title: `Error enabling client: ${error}`,
       }),
   });
 
@@ -44,7 +44,7 @@ function EnableCompanyAlert(props: EnableCompanyAlertProps) {
     <AlertDialog {...other} onOpenChange={closeAlert}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure you want to enable this company?</AlertDialogTitle>
+          <AlertDialogTitle>Are you sure you want to enable this client?</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -52,10 +52,10 @@ function EnableCompanyAlert(props: EnableCompanyAlertProps) {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              enableCompanyMutation.mutate({ companyId, status: true });
+              enableClientMutation.mutate({ clientId, status: true });
             }}
           >
-            {enableCompanyMutation.isPending && <Spinner className="h-5 w-5 text-white" />}
+            {enableClientMutation.isPending && <Spinner className="h-5 w-5 text-white" />}
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -64,6 +64,6 @@ function EnableCompanyAlert(props: EnableCompanyAlertProps) {
   );
 }
 
-type EnableCompanyAlertProps = { companyId: string; closeAlert: () => void } & AlertDialogProps;
+type EnableClientAlertProps = { clientId: string; closeAlert: () => void } & AlertDialogProps;
 
-export default EnableCompanyAlert;
+export default EnableClientAlert;

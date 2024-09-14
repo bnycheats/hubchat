@@ -15,13 +15,13 @@ export type AccountResponse = {
   per_day_rate: number;
   per_month_rate: number;
   user_id: string;
-  company_id: string;
+  client_id: string;
   status: boolean;
 };
 
 export const AccountFormSchema = z.object({
   user_id: z.string().min(1, { message: 'This field is required' }),
-  company_id: z.string().min(1, { message: 'This field is required' }),
+  client_id: z.string().min(1, { message: 'This field is required' }),
   currency: z.string().min(3, { message: 'This field is required' }),
   account_name: z.string().min(1, { message: 'This field is required' }),
   commission_rate: z

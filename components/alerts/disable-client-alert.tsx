@@ -12,31 +12,31 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/components/ui/use-toast';
 import { type AlertDialogProps } from '@radix-ui/react-alert-dialog';
 import Spinner from '@/components/spinner';
-import { updateCompanyStatus } from '@/db/actions/companies';
+import { updateClientStatus } from '@/db/actions/clients';
 
-function DisableCompanyAlert(props: DisableCompanyAlertProps) {
-  const { companyId, closeAlert, ...other } = props;
+function DisableClientAlert(props: DisableClientAlertProps) {
+  const { clientId, closeAlert, ...other } = props;
   const supabase = createClient();
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const disableCompanyMutation = useMutation({
-    mutationFn: (request: { companyId: string; status: boolean }) =>
-      updateCompanyStatus(supabase, request.companyId, request.status),
+  const disableClientMutation = useMutation({
+    mutationFn: (request: { clientId: string; status: boolean }) =>
+      updateClientStatus(supabase, request.clientId, request.status),
     onSuccess: () => {
       toast({
         variant: 'success',
-        title: 'Company disabled successfully',
+        title: 'Client disabled successfully',
       });
       closeAlert();
-      queryClient.invalidateQueries({ queryKey: ['Companies'] });
-      queryClient.invalidateQueries({ queryKey: ['Company'] });
+      queryClient.invalidateQueries({ queryKey: ['Clients'] });
+      queryClient.invalidateQueries({ queryKey: ['Client'] });
     },
     onError: (error: any) =>
       toast({
         variant: 'destructive',
-        title: `Error disabling company: ${error}`,
+        title: `Error disabling client: ${error}`,
       }),
   });
 
@@ -44,7 +44,7 @@ function DisableCompanyAlert(props: DisableCompanyAlertProps) {
     <AlertDialog {...other} onOpenChange={closeAlert}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure you want to disable this company?</AlertDialogTitle>
+          <AlertDialogTitle>Are you sure you want to disable this client?</AlertDialogTitle>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -52,10 +52,10 @@ function DisableCompanyAlert(props: DisableCompanyAlertProps) {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              disableCompanyMutation.mutate({ companyId, status: false });
+              disableClientMutation.mutate({ clientId, status: false });
             }}
           >
-            {disableCompanyMutation.isPending && <Spinner className="h-5 w-5 text-white" />}
+            {disableClientMutation.isPending && <Spinner className="h-5 w-5 text-white" />}
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -64,6 +64,6 @@ function DisableCompanyAlert(props: DisableCompanyAlertProps) {
   );
 }
 
-type DisableCompanyAlertProps = { companyId: string; closeAlert: () => void } & AlertDialogProps;
+type DisableClientAlertProps = { clientId: string; closeAlert: () => void } & AlertDialogProps;
 
-export default DisableCompanyAlert;
+export default DisableClientAlert;

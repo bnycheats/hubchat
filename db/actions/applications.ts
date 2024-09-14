@@ -38,9 +38,17 @@ export async function applyLeave(supabase: SupabaseClient, payload: z.infer<type
   }
 }
 
-export async function updateLeaveStatus(supabase: SupabaseClient, applicationId: string, state: StateEnums) {
+export async function updateLeaveStatus(
+  supabase: SupabaseClient,
+  applicationId: string,
+  state: StateEnums,
+  rejectReason?: string,
+) {
   try {
-    const { error, data } = await supabase.from('applications').update({ state }).eq('id', applicationId);
+    const { error, data } = await supabase
+      .from('applications')
+      .update({ state, reject_reason: rejectReason })
+      .eq('id', applicationId);
     if (error) {
       throw error;
     }

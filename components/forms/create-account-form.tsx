@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import currencies from '@/constants/currencies';
 import { Input } from '@/components/ui/input';
-import CompanyDetailsSection from '../sections/company-details-section';
+import ClientDetailsSection from '../sections/client-details-section';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
 import { createAccount } from '@/db/actions/accounts';
@@ -23,7 +23,7 @@ import Spinner from '@/components/spinner';
 import { useQuery } from '@tanstack/react-query';
 import convertAmountToCents from '@/utils/convertAmountToCents';
 import { createClient } from '@/utils/supabase/client';
-import { getCompanies } from '@/db/queries/companies';
+import { getClients } from '@/db/queries/clients';
 import { cn } from '@/lib/utils';
 import { getUsers } from '@/db/queries/auth';
 import { useSearchParams } from 'next/navigation';
@@ -41,14 +41,14 @@ export default function CreateAccountForm() {
     queryFn: () => getUsers(supabase),
   });
 
-  const { data: companies, isLoading: companiesLoading } = useQuery({
-    queryKey: ['Companies'],
-    queryFn: () => getCompanies(supabase),
+  const { data: clients, isLoading: clientsLoading } = useQuery({
+    queryKey: ['Clients'],
+    queryFn: () => getClients(supabase),
   });
 
   const defaultValues: z.infer<typeof AccountFormSchema> = {
     user_id: searchParams.get('userId') ?? '',
-    company_id: '',
+    client_id: '',
     currency: '',
     account_name: '',
     commission_rate: '',
@@ -65,7 +65,7 @@ export default function CreateAccountForm() {
     defaultValues,
   });
 
-  const company = companies?.data?.find((item) => item.id === form.watch('company_id'));
+  const client = clients?.data?.find((item) => item.id === form.watch('client_id'));
 
   const createAccountMutation = useMutation({
     mutationFn: (request: z.infer<typeof AccountFormSchema>) => createAccount(supabase, request),
@@ -96,18 +96,18 @@ export default function CreateAccountForm() {
   };
 
   useEffect(() => {
-    if (company) {
-      form.setValue('currency', company.currency, {
+    if (client) {
+      form.setValue('currency', client.currency, {
         shouldValidate: true,
         shouldDirty: true,
       });
     }
-  }, [company, form]);
+  }, [client, form]);
 
   return (
     <div>
-      {(createAccountMutation.isPending || usersLoading || companiesLoading) && <Spinner centered fullScreen />}
-      {company && <CompanyDetailsSection {...company} />}
+      {(createAccountMutation.isPending || usersLoading || clientsLoading) && <Spinner centered fullScreen />}
+      {client && <ClientDetailsSection {...client} />}
       <section>
         <Form {...form}>
           <form className="mt-4 grid grid-cols-2 gap-6" onSubmit={form.handleSubmit(onPressSubmit)}>
@@ -165,20 +165,20 @@ export default function CreateAccountForm() {
             />
             <FormField
               control={form.control}
-              name="company_id"
+              name="client_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Company</FormLabel>
+                  <FormLabel>Client</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select company*" />
+                        <SelectValue placeholder="Select client*" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {companies?.data?.map((item, index) => (
+                      {clients?.data?.map((item, index) => (
                         <SelectItem key={index} value={item.id}>
-                          {item.company_name}
+                          {item.owner_name}
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -11,7 +11,7 @@ function Header(props: PropsWithChildren) {
   const { setSidebarOpen, sidebarOpen } = usePrivateLayout();
   return (
     <header className="sticky bg-white top-0 z-40 flex w-full border-b">
-      <div className="mx-auto flex max-w-[968px] flex-grow items-center justify-between px-2 py-4">
+      <div className="mx-auto flex container flex-grow items-center justify-between py-4">
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden">
           <button
             aria-controls="sidebar"

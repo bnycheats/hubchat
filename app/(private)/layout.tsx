@@ -1,5 +1,5 @@
 import { type PropsWithChildren } from 'react';
-import { AiOutlineAppstore, AiOutlineTeam, AiOutlineBank, AiOutlineCalendar } from 'react-icons/ai';
+import { AiOutlineAppstore, AiOutlineTeam, AiOutlineCalendar } from 'react-icons/ai';
 
 import Header from '@/components/header';
 import { type MenuModelType } from '@/components/menu';
@@ -20,7 +20,7 @@ export default function PrivateLayout({ children }: PropsWithChildren) {
             <HeaderDropdown />
           </Header>
           <main>
-            <div className="mx-auto max-w-[968px] px-4 py-4 xl:px-0">{children}</div>
+            <div className="container py-4">{children}</div>
           </main>
         </div>
       </section>
@@ -52,16 +52,16 @@ function getMenus(): MenuModelType[] {
           icon: <AiOutlineTeam />,
         },
         {
+          itemKey: 'clients',
+          to: '/clients',
+          label: 'Clients',
+          icon: <AiOutlineTeam />,
+        },
+        {
           itemKey: 'applications',
           to: '/applications',
           label: 'Applications',
           icon: <AiOutlineCalendar />,
-        },
-        {
-          itemKey: 'companies',
-          to: '/companies',
-          label: 'Companies',
-          icon: <AiOutlineBank />,
         },
       ],
     },

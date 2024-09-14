@@ -16,7 +16,7 @@ import { updateLeaveStatus } from '@/db/actions/applications';
 import { StateEnums } from '@/helpers/types';
 
 function RejectLeaveAlert(props: RejectLeaveAlertProps) {
-  const { applicationId, closeAlert, ...other } = props;
+  const { applicationId, rejectReason, closeAlert, ...other } = props;
   const supabase = createClient();
 
   const { toast } = useToast();
@@ -24,7 +24,7 @@ function RejectLeaveAlert(props: RejectLeaveAlertProps) {
 
   const rejectLeaveMutation = useMutation({
     mutationFn: (request: { applicationId: string }) =>
-      updateLeaveStatus(supabase, request.applicationId, StateEnums.REJECTED),
+      updateLeaveStatus(supabase, request.applicationId, StateEnums.REJECTED, rejectReason),
     onSuccess: () => {
       toast({
         variant: 'success',
@@ -64,6 +64,6 @@ function RejectLeaveAlert(props: RejectLeaveAlertProps) {
   );
 }
 
-type RejectLeaveAlertProps = { applicationId: string; closeAlert: () => void } & AlertDialogProps;
+type RejectLeaveAlertProps = { applicationId: string; rejectReason: string; closeAlert: () => void } & AlertDialogProps;
 
 export default RejectLeaveAlert;

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
-import { getCompanies } from '@/db/queries/companies';
+import { getClients } from '@/db/queries/clients';
 import { getUsers } from '@/db/queries/auth';
 import { createClient } from '@/utils/supabase/server';
 import CreateAccountForm from '@/components/forms/create-account-form';
@@ -12,8 +12,8 @@ export default async function CreateAccountPage() {
     const supabase = createClient();
 
     await queryClient.prefetchQuery({
-      queryKey: ['Companies'],
-      queryFn: () => getCompanies(supabase),
+      queryKey: ['Clients'],
+      queryFn: () => getClients(supabase),
     });
 
     await queryClient.prefetchQuery({

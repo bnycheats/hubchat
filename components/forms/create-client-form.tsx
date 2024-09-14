@@ -12,53 +12,41 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/components/ui/use-toast';
 import Spinner from '@/components/spinner';
 import convertAmountToCents from '@/utils/convertAmountToCents';
-import convertCentsToAmount from '@/utils/convertCentsToAmount';
-import { updateCompany } from '@/db/actions/companies';
-import { useQuery } from '@tanstack/react-query';
-import { createClient } from '@/utils/supabase/client';
-import Message from '@/components/message';
-import { CompanyFormSchema, type CompanyResponse } from '@/helpers/company-types';
-import { getCompany } from '@/db/queries/companies';
-import { notFound } from 'next/navigation';
+import { createClient } from '@/db/actions/clients';
+import { createClient as supabaseCreateClient } from '@/utils/supabase/client';
+import { ClientFormSchema } from '@/helpers/client-types';
 
-export default function UpdateCompanyForm(props: UpdateCompanyFormProps) {
+export default function CreateClientForm() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const supabase = createClient();
+  const supabase = supabaseCreateClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['Company', props.companyId],
-    queryFn: () => getCompany(supabase, props.companyId),
-  });
-
-  const company = data as CompanyResponse;
-
-  const defaultValues: z.infer<typeof CompanyFormSchema> = {
-    ...company,
-    per_day_rate: convertCentsToAmount(Number(company.per_day_rate)),
-    per_hour_rate: convertCentsToAmount(Number(company.per_hour_rate)),
-    per_month_rate: convertCentsToAmount(Number(company.per_month_rate)),
+  const defaultValues: z.infer<typeof ClientFormSchema> = {
+    owner_name: '',
+    company_name: '',
+    currency: '',
+    commission_rate: '',
+    expenses_rate: '',
+    over_time_rate: '',
+    per_hour_rate: '',
+    per_day_rate: '',
+    per_month_rate: '',
   };
 
-  const form = useForm<z.infer<typeof CompanyFormSchema>>({
-    resolver: zodResolver(CompanyFormSchema),
+  const form = useForm<z.infer<typeof ClientFormSchema>>({
+    resolver: zodResolver(ClientFormSchema),
     defaultValues,
   });
 
-  const updateCompanyMutation = useMutation({
-    mutationFn: (payload: z.infer<typeof CompanyFormSchema>) => updateCompany(supabase, props.companyId, payload),
+  const createClientMutation = useMutation({
+    mutationFn: (payload: z.infer<typeof ClientFormSchema>) => createClient(supabase, payload),
     onSuccess: () => {
       toast({
         variant: 'success',
-        title: 'Company updated successfully',
+        title: 'Client created successfully',
       });
-      form.reset(form.watch(), {
-        keepValues: false,
-        keepDirty: false,
-        keepDefaultValues: false,
-      });
-      queryClient.invalidateQueries({ queryKey: ['Companies'] });
-      queryClient.invalidateQueries({ queryKey: ['Company'] });
+      form.reset();
+      queryClient.invalidateQueries({ queryKey: ['Clients'] });
     },
     onError: (error: any) =>
       toast({
@@ -67,8 +55,8 @@ export default function UpdateCompanyForm(props: UpdateCompanyFormProps) {
       }),
   });
 
-  const onPressSubmit: SubmitHandler<z.infer<typeof CompanyFormSchema>> = (payload) =>
-    updateCompanyMutation.mutate({
+  const onPressSubmit: SubmitHandler<z.infer<typeof ClientFormSchema>> = (payload) =>
+    createClientMutation.mutate({
       ...payload,
       over_time_rate: convertAmountToCents(Number(payload.over_time_rate)),
       per_day_rate: convertAmountToCents(Number(payload.per_day_rate)),
@@ -76,20 +64,9 @@ export default function UpdateCompanyForm(props: UpdateCompanyFormProps) {
       per_month_rate: convertAmountToCents(Number(payload.per_month_rate)),
     });
 
-  if (!data) return notFound();
-
-  if (!data.status) {
-    return (
-      <Message
-        title="Company Disabled"
-        message="Company has been disabled. Please contact support for more information."
-      />
-    );
-  }
-
   return (
     <Form {...form}>
-      {(updateCompanyMutation.isPending || isLoading) && <Spinner centered fullScreen />}
+      {createClientMutation.isPending && <Spinner centered fullScreen />}
       <form className="mt-4 grid grid-cols-2 gap-6" onSubmit={form.handleSubmit(onPressSubmit)}>
         <FormField
           control={form.control}
@@ -223,14 +200,10 @@ export default function UpdateCompanyForm(props: UpdateCompanyFormProps) {
         />
         <div className="col-span-2 flex justify-end gap-3">
           <Button className="rounded-full w-28" type="submit" disabled={!form.formState.isDirty}>
-            Update
+            Create
           </Button>
         </div>
       </form>
     </Form>
   );
 }
-
-type UpdateCompanyFormProps = {
-  companyId: string;
-};

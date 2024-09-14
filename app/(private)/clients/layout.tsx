@@ -4,11 +4,11 @@ import { Metadata } from 'next';
 /**
  * The Layout is needed to specify the page title and meta tags.
  */
-export default function CompaniesLayout({ children }: { children: ReactNode }) {
+export default function ClientsLayout({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
 export const metadata: Metadata = {
-  title: 'Companies',
+  title: 'Clients',
   robots: 'noindex',
 };

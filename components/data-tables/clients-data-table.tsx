@@ -3,24 +3,24 @@
 import { format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/utils/supabase/client';
-import { getCompanies } from '@/db/queries/companies';
+import { getClients } from '@/db/queries/clients';
 import Pagination from '@/components/pagination';
 import DataTable from '@/components/data-table';
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { DEFAULT_SIZE, DEFAULT_PAGE } from '@/constants/data-table';
 import { useSearchParams } from 'next/navigation';
-import ActionMenu from '../action-menus/company-action-menu';
+import ActionMenu from '../action-menus/client-action-menu';
 
-function CompaniesDataTable() {
+function ClientsDataTable() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const [page, setPage] = useState(Number(searchParams.get('page')) || DEFAULT_PAGE);
   const filters: { userId?: string; status?: string } = JSON.parse(searchParams.get('filters') ?? '{}');
 
   const { data, isFetching } = useQuery({
-    queryKey: ['Companies', page, filters],
-    queryFn: () => getCompanies(supabase, page, DEFAULT_SIZE, filters),
+    queryKey: ['Clients', page, filters],
+    queryFn: () => getClients(supabase, page, DEFAULT_SIZE, filters),
     placeholderData: (previousData) => previousData,
   });
 
@@ -79,4 +79,4 @@ function CompaniesDataTable() {
   );
 }
 
-export default CompaniesDataTable;
+export default ClientsDataTable;
